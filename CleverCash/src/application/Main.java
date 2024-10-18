@@ -45,7 +45,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         try {
             // Create buttons
-        	
+        	System.out.println("Hello World");
             Button home = createButton("Home", "/application/resources/home.png", 300, 50);
             Button accounts = createButton("Accounts", "/application/resources/accounts.png", 300, 50);
             Button transactions = createButton("Transactions", "/application/resources/transactions.png", 300, 50);

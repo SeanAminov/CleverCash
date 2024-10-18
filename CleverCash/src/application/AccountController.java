@@ -3,7 +3,8 @@ package application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.time.LocalDate;
@@ -15,6 +16,31 @@ public class AccountController extends Stage {
     private Set<String> accountNames = new HashSet<>();
 
     public void start(Stage stage) {
+        BorderPane root = new BorderPane();
+
+        // Add Account Button
+        Button addAccountButton = new Button("Add Account");
+        addAccountButton.setPrefSize(200, 50);
+        addAccountButton.setOnAction(e -> showAddAccountPopup());
+
+        // Center Layout for Add Account Button
+        VBox centerBox = new VBox(addAccountButton);
+        centerBox.setPadding(new Insets(20));
+        centerBox.setAlignment(javafx.geometry.Pos.CENTER);
+
+        root.setCenter(centerBox);
+
+        Scene scene = new Scene(root, 400, 400);
+        stage.setScene(scene);
+        stage.setTitle("Accounts Page");
+        stage.show();
+    }
+
+    // Method to Show the Account Creation Pop-up
+    private void showAddAccountPopup() {
+        Stage popupStage = new Stage();
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(10));
         grid.setVgap(10);
@@ -41,10 +67,9 @@ public class AccountController extends Stage {
                 if (accountNames.contains(name)) {
                     showAlert("Error", "Account name already exists.");
                 } else {
-                    Account account = new Account(name, date, balance);
                     accountNames.add(name);
                     showAlert("Success", "Account created successfully.");
-                    stage.close(); // Close the account creation window
+                    popupStage.close();
                 }
             }
         });
@@ -57,10 +82,10 @@ public class AccountController extends Stage {
         grid.add(balanceField, 1, 2);
         grid.add(saveButton, 1, 3);
 
-        Scene scene = new Scene(grid, 300, 200);
-        stage.setScene(scene);
-        stage.setTitle("Create New Account");
-        stage.show();
+        Scene popupScene = new Scene(grid, 300, 200);
+        popupStage.setScene(popupScene);
+        popupStage.setTitle("Add New Account");
+        popupStage.show();
     }
 
     private boolean validateInput(TextField nameField, TextField balanceField) {

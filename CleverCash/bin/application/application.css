@@ -1,0 +1,10 @@
+.button {
+    -fx-font-family: "Source Sans Pro"; /* Change to your desired font */
+    -fx-font-size: 35px; /* Change to your desired font size */
+    -fx-padding: 5px 10px; /* Padding around the text and icon */
+    -fx-background-radius: 15; /* Border radius */
+}
+
+.text-field {
+    -fx-font-size: 20px; /* Adjust the size as needed */
+}

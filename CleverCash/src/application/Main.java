@@ -11,15 +11,14 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 /**
- * The HomepageController class represents the main interface for the 
- * Budget Tracker Application. It provides navigation between different 
- * sections such as Home, Accounts, Transactions, Reports, and Settings.
+ * The Main class is the entry point for the Budget Tracker Application. 
+ * It provides the main navigation interface for Home, Accounts, Transactions, Reports, and Settings.
  */
-public class HomepageController extends Application {
+public class Main extends Application {
 
     /** Title of the application window. */
     private final static String title = "Budget Tracker Application";
-    
+
     /** Main layout container for the application. */
     private BorderPane root;
 
@@ -27,17 +26,17 @@ public class HomepageController extends Application {
     private AccountController aController = new AccountController();
 
     /**
-     * Creates a button with a given name, icon, and size.
-     * 
-     * @param name    The label text for the button.
+     * Creates a button with the specified name, icon, and size.
+     *
+     * @param name     The label text for the button.
      * @param iconPath The path to the icon image.
-     * @param prefW   The preferred width of the button.
-     * @param prefH   The preferred height of the button.
+     * @param prefW    The preferred width of the button.
+     * @param prefH    The preferred height of the button.
      * @return A Button object with the specified properties.
      */
     private static Button createButton(String name, String iconPath, double prefW, double prefH) {
         Button button = new Button();
-        ImageView icon = new ImageView(new Image(HomepageController.class.getResourceAsStream(iconPath)));
+        ImageView icon = new ImageView(new Image(Main.class.getResourceAsStream(iconPath)));
         icon.setFitWidth(30);
         icon.setFitHeight(30);
 
@@ -52,7 +51,7 @@ public class HomepageController extends Application {
 
     /**
      * Starts the JavaFX application and initializes the primary stage.
-     * 
+     *
      * @param primaryStage The main application window.
      */
     @Override
@@ -74,8 +73,8 @@ public class HomepageController extends Application {
     }
 
     /**
-     * Creates the menu buttons with event handlers and returns them as a VBox.
-     * 
+     * Creates the menu buttons with event handlers for navigation.
+     *
      * @return A VBox containing the search field and menu buttons.
      */
     private VBox createMenuButtons() {
@@ -107,47 +106,45 @@ public class HomepageController extends Application {
     }
 
     /**
-     * Displays the Accounts page by clearing the center of the layout and
-     * calling the AccountController to show its content.
+     * Displays the Accounts page by calling AccountController.
      */
     private void showAccountsPage() {
-        root.setCenter(new VBox()); 
-        aController.show(root); 
+        root.setCenter(new VBox());
+        aController.show(root);
     }
 
     /**
-     * Displays the Home page by clearing the center of the layout.
+     * Displays the Home page.
      */
     private void showHomePage() {
         root.setCenter(new VBox());
-        // WILL ADD MORE LATER(filler) //
     }
 
     /**
-     * Displays the Transactions page by clearing the center of the layout.
+     * Displays the Transactions page.
      */
     private void showTransactionsPage() {
         root.setCenter(new VBox());
     }
 
     /**
-     * Displays the Reports page by clearing the center of the layout.
+     * Displays the Reports page.
      */
     private void showReportsPage() {
         root.setCenter(new VBox());
     }
 
     /**
-     * Displays the Settings page by clearing the center of the layout.
+     * Displays the Settings page.
      */
     private void showSettingsPage() {
         root.setCenter(new VBox());
     }
 
     /**
-     * The main entry point for the JavaFX application.
-     * 
-     * @param args Command line arguments (not used).
+     * Main entry point for the application.
+     *
+     * @param args Command line arguments.
      */
     public static void main(String[] args) {
         launch(args);

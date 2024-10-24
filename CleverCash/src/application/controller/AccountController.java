@@ -1,27 +1,20 @@
 package application.controller;
 
-import java.time.LocalDate;
-
 import application.database.AccountDatabase;
 import application.model.AccountBean;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
-import javafx.geometry.VPos;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import java.time.LocalDate;
 
 /**
  * The AccountController manages the Accounts page and displays stored accounts
@@ -29,7 +22,10 @@ import javafx.stage.Stage;
  */
 public class AccountController {
 
-    private final AccountDatabase accountDatabase = new AccountDatabase();
+    private final AccountDatabase accountDatabase = new AccountDatabase(); // Database instance
+
+    @FXML
+    private AnchorPane accountBox; // Root layout from FXML
 
     @FXML
     private Button addAccountButton;
@@ -92,13 +88,14 @@ public class AccountController {
     }
 
     /**
-     * Handles deleting all accounts from the database and refreshing the table.
+     * Handles clearing all accounts from the database and refreshing the table.
+     * This method now only deletes the account records without deleting the database file.
      */
     @FXML
     private void handleDeleteAllAccounts() {
-        accountDatabase.deleteAllAccounts();
-        refreshTableData(); // Refresh the TableView after deletion
-        showAlert("Success", "All accounts have been deleted.");
+        accountDatabase.clearAllAccounts();
+        refreshTableData(); // Refresh the TableView after clearing
+        showAlert("Success", "All accounts have been cleared.");
     }
 
     /**
@@ -111,13 +108,11 @@ public class AccountController {
         popupStage.setTitle("Add New Account");
 
         GridPane form = createAccountForm(popupStage);
-        Scene popupScene = new Scene(form, 400, 250);
-        popupScene.getStylesheets().add(getClass().getResource("/css/account.css").toExternalForm());
-        popupStage.setResizable(false);
+        Scene popupScene = new Scene(form, 400, 300);
+
         popupStage.setScene(popupScene);
         popupStage.show();
     }
-
 
     /**
      * Creates a form layout for adding a new account.
@@ -127,47 +122,37 @@ public class AccountController {
      */
     private GridPane createAccountForm(Stage popupStage) {
         GridPane grid = new GridPane();
-        grid.getStyleClass().add("popup-grid");
+        grid.setPadding(new Insets(20));
+        grid.setVgap(15);
+        grid.setHgap(10);
 
         Label nameLabel = new Label("Account Name:");
-        nameLabel.getStyleClass().add("popup-label");
         TextField nameField = new TextField();
         nameField.setPromptText("Enter account name");
-        nameField.getStyleClass().add("popup-text-field");
 
         Label dateLabel = new Label("Opening Date:");
-        dateLabel.getStyleClass().add("popup-label");
         DatePicker datePicker = new DatePicker(LocalDate.now());
-        datePicker.getStyleClass().add("popup-date-picker");
 
         Label balanceLabel = new Label("Opening Balance:");
-        balanceLabel.getStyleClass().add("popup-label");
         TextField balanceField = new TextField();
         balanceField.setPromptText("Enter opening balance");
-        balanceField.getStyleClass().add("popup-text-field");
 
         Button saveButton = new Button("Save");
         saveButton.setOnAction(e -> handleSave(nameField, datePicker, balanceField, popupStage));
-        saveButton.getStyleClass().add("popup-button");
 
         Button cancelButton = new Button("Cancel");
         cancelButton.setOnAction(e -> popupStage.close());
-        cancelButton.getStyleClass().add("popup-button");
 
         HBox buttonBox = new HBox(10, saveButton, cancelButton);
-        buttonBox.setAlignment(Pos.CENTER);
-        GridPane.setConstraints(buttonBox, 0, 3, 2, 1); // Span across two columns
-        GridPane.setValignment(buttonBox, VPos.BOTTOM); // Align to bottom
+        buttonBox.setAlignment(Pos.CENTER_RIGHT);
 
         grid.addRow(0, nameLabel, nameField);
         grid.addRow(1, dateLabel, datePicker);
         grid.addRow(2, balanceLabel, balanceField);
-        grid.add(buttonBox, 0, 3, 2, 1); // Add buttonBox to the grid
+        grid.add(buttonBox, 1, 3);
 
         return grid;
     }
-
-
 
     /**
      * Handles the save operation when a new account is added.

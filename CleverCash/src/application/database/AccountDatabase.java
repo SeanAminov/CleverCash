@@ -20,7 +20,6 @@ public class AccountDatabase {
     public AccountDatabase() {
         createTableIfNotExists();
     }
-
     /**
      * Establishes a connection to the SQLite database.
      *
@@ -131,19 +130,19 @@ public class AccountDatabase {
     }
 
     /**
-     * Deletes all accounts from the database. Useful for testing or resetting data.
+     * Clears all accounts from the database without deleting the database file.
      */
-    public void deleteAllAccounts() {
+    public void clearAllAccounts() {
         String sql = "DELETE FROM accounts";
 
         try (Connection conn = connect();
              Statement stmt = conn.createStatement()) {
 
             stmt.executeUpdate(sql);
-            System.out.println("All accounts have been deleted.");
+            System.out.println("All accounts have been cleared.");
 
         } catch (SQLException e) {
-            System.err.println("Failed to delete accounts.");
+            System.err.println("Failed to clear accounts.");
             e.printStackTrace();
         }
     }

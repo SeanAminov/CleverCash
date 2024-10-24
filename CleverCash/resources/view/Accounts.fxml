@@ -6,25 +6,25 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="745.0" prefWidth="1210.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.AccountController">
+<AnchorPane fx:id="accountBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="745.0" prefWidth="1210.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.AccountController">
    <children>
       <!-- Add Account Button -->
-      <Button fx:id="addAccountButton" layoutX="320.0" layoutY="40.0" mnemonicParsing="false" onAction="#showAccountPopup" prefHeight="70.0" prefWidth="245.0" text="Add Account">
+      <Button fx:id="addAccountButton" layoutX="360.0" layoutY="40.0" mnemonicParsing="false" onAction="#showAccountPopup" prefHeight="70.0" prefWidth="245.0" text="Add Account">
          <font>
             <Font name="Myanmar Text Bold" size="25.0" />
          </font>
       </Button>
-      <!-- Delete All Accounts Button -->
-      <Button fx:id="deleteAllButton" layoutX="590.0" layoutY="40.0" mnemonicParsing="false" onAction="#handleDeleteAllAccounts" prefHeight="70.0" prefWidth="340.0" text="Delete All Accounts">
+      <!-- Updated Delete All Accounts Button -->
+      <Button fx:id="deleteAllButton" layoutX="630.0" layoutY="40.0" mnemonicParsing="false" onAction="#handleDeleteAllAccounts" prefHeight="70.0" prefWidth="260.0" text="Delete All Accounts">
          <font>
             <Font name="Myanmar Text Bold" size="25.0" />
          </font>
       </Button>
       <!-- Accounts TableView -->
-      <TableView fx:id="tableView" layoutX="82.0" layoutY="151.0" prefHeight="530.0" prefWidth="1050.0" style="-fx-border-color: black;">
+      <TableView fx:id="tableView" layoutX="82.0" layoutY="209.0" prefHeight="473.0" prefWidth="1050.0">
         <columns>
           <TableColumn fx:id="nameCol" prefWidth="350.0" text="Account Name" />
-          <TableColumn fx:id="dateCol" prefWidth="350.0" sortType="DESCENDING" text="Opening Date" />
+          <TableColumn fx:id="dateCol" prefWidth="350.0" text="Opening Date" />
           <TableColumn fx:id="balanceCol" prefWidth="350.0" text="Opening Balance" />
         </columns>
       </TableView>

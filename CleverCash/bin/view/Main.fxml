@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="mainBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.MainController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.MainController">
    <children>
       <AnchorPane prefHeight="64.0" prefWidth="1280.0">
          <children>
@@ -80,6 +80,6 @@
             </VBox>
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="71.0" layoutY="57.0" prefHeight="745.0" prefWidth="1210.0" />
+      <AnchorPane fx:id="mainBox" layoutX="71.0" layoutY="57.0" prefHeight="745.0" prefWidth="1210.0" />
    </children>
 </AnchorPane>

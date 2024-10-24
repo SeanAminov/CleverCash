@@ -1,11 +1,12 @@
 package application.controller;
 
+import java.io.IOException;
+import java.net.URL;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
-import java.io.IOException;
-import java.net.URL;
 
 /**
  * The MainController class handles the main navigation and management of different pages
@@ -21,6 +22,9 @@ public class MainController {
     /** The main container for displaying the application's content. */
     @FXML
     private AnchorPane mainBox;
+
+	@FXML 
+	private AnchorPane menuBox;
 
     /**
      * Initializes the MainController by showing the home page when the application starts.
@@ -41,131 +45,57 @@ public class MainController {
 
     /**
      * Displays the menu slider by loading the MenuBar.fxml file.
-     * Removes the current pane if it exists before adding the new one.
      */
     @FXML
     public void showMenuSlider() {
-        URL url = getClass().getResource("/view/MenuBar.fxml");
+    	//needs to be implemented
+    }
 
+    /**
+     * Loads a page specified by the FXML file path.
+     *
+     * @param fxmlPath The path to the FXML file.
+     */
+    private void loadPage(String fxmlPath) {
+        URL url = getClass().getResource(fxmlPath);
         try {
             if (currentPane != null) {
                 mainBox.getChildren().remove(currentPane);
             }
-
             currentPane = FXMLLoader.load(url);
             mainBox.getChildren().add(currentPane);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
+    
     /**
      * Displays the home page by loading the Home.fxml file.
      * Sets the layout position of the home page and updates the current pane.
      */
+ // Page display methods
     @FXML
     public void showHomePage() {
-        URL url = getClass().getResource("/view/Home.fxml");
-
-        try {
-            if (currentPane != null) {
-                mainBox.getChildren().remove(currentPane);
-            }
-
-            currentPane = FXMLLoader.load(url);
-            currentPane.setLayoutX(71.0);
-            currentPane.setLayoutY(57.0);
-            mainBox.getChildren().add(currentPane);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        loadPage("/view/Home.fxml");
     }
 
-    /**
-     * Displays the accounts page by loading the Accounts.fxml file.
-     * Sets the layout position of the accounts page and updates the current pane.
-     */
     @FXML
     public void showAccountPage() {
-        URL url = getClass().getResource("/view/Accounts.fxml");
-
-        try {
-            if (currentPane != null) {
-                mainBox.getChildren().remove(currentPane);
-            }
-
-            currentPane = FXMLLoader.load(url);
-            currentPane.setLayoutX(71.0);
-            currentPane.setLayoutY(57.0);
-            mainBox.getChildren().add(currentPane);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        loadPage("/view/Accounts.fxml");
     }
 
-    /**
-     * Displays the transactions page by loading the Transactions.fxml file.
-     * Sets the layout position of the transactions page and updates the current pane.
-     */
     @FXML
     public void showTransactionPage() {
-        URL url = getClass().getResource("/view/Transactions.fxml");
-
-        try {
-            if (currentPane != null) {
-                mainBox.getChildren().remove(currentPane);
-            }
-
-            currentPane = FXMLLoader.load(url);
-            currentPane.setLayoutX(71.0);
-            currentPane.setLayoutY(57.0);
-            mainBox.getChildren().add(currentPane);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        loadPage("/view/Transactions.fxml");
     }
 
-    /**
-     * Displays the reports page by loading the Reports.fxml file.
-     * Sets the layout position of the reports page and updates the current pane.
-     */
     @FXML
     public void showReportPage() {
-        URL url = getClass().getResource("/view/Reports.fxml");
-
-        try {
-            if (currentPane != null) {
-                mainBox.getChildren().remove(currentPane);
-            }
-
-            currentPane = FXMLLoader.load(url);
-            currentPane.setLayoutX(71.0);
-            currentPane.setLayoutY(57.0);
-            mainBox.getChildren().add(currentPane);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        loadPage("/view/Reports.fxml");
     }
 
-    /**
-     * Displays the settings page by loading the Settings.fxml file.
-     * Sets the layout position of the settings page and updates the current pane.
-     */
     @FXML
     public void showSettingPage() {
-        URL url = getClass().getResource("/view/Settings.fxml");
-
-        try {
-            if (currentPane != null) {
-                mainBox.getChildren().remove(currentPane);
-            }
-
-            currentPane = FXMLLoader.load(url);
-            currentPane.setLayoutX(71.0);
-            currentPane.setLayoutY(57.0);
-            mainBox.getChildren().add(currentPane);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        loadPage("/view/Settings.fxml");
     }
 }

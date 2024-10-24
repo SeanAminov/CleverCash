@@ -13,20 +13,21 @@ import javafx.stage.StageStyle;
  */
 public class Main extends Application {
 
-	private double xOffset = 0;
+    private double xOffset = 0;
     private double yOffset = 0;
-	
+
     /**
      * Starts the JavaFX application by setting up the primary stage.
      *
-     * @param primaryStage The primary stage for this application, onto which 
+     * @param primaryStage The primary stage for this application, onto which
      *                     the application scene can be set.
      */
     @Override
     public void start(Stage primaryStage) {
         try {
-            AnchorPane root = (AnchorPane) FXMLLoader.load(getClass().getResource("/view/Main.fxml"));
-            
+            AnchorPane root = FXMLLoader.load(getClass().getResource("/view/Main.fxml"));
+
+            // Allow the window to be draggable
             root.setOnMousePressed(event -> {
                 xOffset = event.getSceneX();
                 yOffset = event.getSceneY();
@@ -36,7 +37,7 @@ public class Main extends Application {
                 primaryStage.setX(event.getScreenX() - xOffset);
                 primaryStage.setY(event.getScreenY() - yOffset);
             });
-            
+
             Scene scene = new Scene(root, 1280, 800);
             scene.getStylesheets().add(getClass().getResource("/css/application.css").toExternalForm());
             primaryStage.setScene(scene);

@@ -3,7 +3,6 @@ package application.database;
 import application.model.AccountBean;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
 import java.sql.*;
 import java.time.LocalDate;
 
@@ -39,7 +38,7 @@ public class AccountDatabase {
         String sql = """
                 CREATE TABLE IF NOT EXISTS accounts (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    name TEXT NOT NULL,
+                    name TEXT NOT NULL UNIQUE,
                     openingDate TEXT NOT NULL,
                     openingBalance REAL NOT NULL
                 );
@@ -76,6 +75,29 @@ public class AccountDatabase {
             System.err.println("Failed to add account: " + account.getName());
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Checks if an account with the given name already exists in the database.
+     *
+     * @param name The name of the account to check.
+     * @return True if the account name exists, false otherwise.
+     */
+    public boolean accountNameExists(String name) {
+        String sql = "SELECT COUNT(*) FROM accounts WHERE name = ?";
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, name);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt(1);
+                return count > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     /**

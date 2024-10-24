@@ -3,14 +3,17 @@ package application.controller;
 import application.database.AccountDatabase;
 import application.model.AccountBean;
 import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
+import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
+import javafx.scene.Scene;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import java.time.LocalDate;
 
 /**
@@ -20,64 +23,58 @@ import java.time.LocalDate;
 public class AccountController {
 
     private final AccountDatabase accountDatabase = new AccountDatabase(); // Database instance
-    private final TableView<AccountBean> tableView = new TableView<>(); // Initialize TableView
+
+    @FXML
+    private AnchorPane accountBox; // Root layout from FXML
+
+    @FXML
+    private Button addAccountButton;
+
+    @FXML
+    private Button deleteAllButton;
+
+    @FXML
+    private TableView<AccountBean> tableView;
+
+    @FXML
+    private TableColumn<AccountBean, String> nameCol;
+
+    @FXML
+    private TableColumn<AccountBean, LocalDate> dateCol;
+
+    @FXML
+    private TableColumn<AccountBean, Double> balanceCol;
 
     /**
-     * Displays the Accounts page with the "Add Account" and "Delete All" buttons
-     * and the TableView below them.
-     *
-     * @param root The main layout of the application.
+     * Initializes the controller class. This method is automatically called
+     * after the FXML file has been loaded.
      */
-    public void show(BorderPane root) {
-        VBox accountsLayout = new VBox(10);
-        accountsLayout.setPadding(new Insets(20));
-        accountsLayout.setAlignment(javafx.geometry.Pos.TOP_CENTER);
-
-        HBox buttonBox = new HBox(10); // Layout for buttons
-        buttonBox.setAlignment(javafx.geometry.Pos.CENTER);
-
-        // Add Account button
-        Button addAccountButton = new Button("Add Account");
-        addAccountButton.setPrefSize(120, 40);
-        addAccountButton.setOnAction(e -> showAccountPopup());
-
-        // Delete All Accounts button
-        Button deleteAllButton = new Button("Delete All Accounts");
-        deleteAllButton.setPrefSize(160, 40);
-        deleteAllButton.setOnAction(e -> handleDeleteAllAccounts());
-
-        // Add both buttons to the HBox
-        buttonBox.getChildren().addAll(addAccountButton, deleteAllButton);
-
-        // Set up the TableView and refresh it with data
+    @FXML
+    public void initialize() {
         setupAccountTableView();
         refreshTableData();
-
-        // Ensure the TableView expands to fill the available space
-        VBox.setVgrow(tableView, Priority.ALWAYS);
-
-        // Add the buttons and TableView to the VBox
-        accountsLayout.getChildren().addAll(buttonBox, tableView);
-
-        // Set the VBox as the center content of the root layout
-        root.setCenter(accountsLayout);
     }
 
     /**
      * Sets up the TableView with columns for displaying account information.
      */
     private void setupAccountTableView() {
-        TableColumn<AccountBean, String> nameCol = new TableColumn<>("Name");
         nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-
-        TableColumn<AccountBean, String> dateCol = new TableColumn<>("Opening Date");
         dateCol.setCellValueFactory(new PropertyValueFactory<>("openingDate"));
-
-        TableColumn<AccountBean, Double> balanceCol = new TableColumn<>("Opening Balance");
         balanceCol.setCellValueFactory(new PropertyValueFactory<>("openingBalance"));
 
-        tableView.getColumns().clear();
-        tableView.getColumns().addAll(nameCol, dateCol, balanceCol);
+        // Format the balance to two decimal places
+        balanceCol.setCellFactory(column -> new TableCell<AccountBean, Double>() {
+            @Override
+            protected void updateItem(Double item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(String.format("%.2f", item));
+                }
+            }
+        });
     }
 
     /**
@@ -93,6 +90,7 @@ public class AccountController {
     /**
      * Handles deleting all accounts from the database and refreshing the table.
      */
+    @FXML
     private void handleDeleteAllAccounts() {
         accountDatabase.deleteAllAccounts();
         refreshTableData(); // Refresh the TableView after deletion
@@ -102,7 +100,8 @@ public class AccountController {
     /**
      * Displays a pop-up form to add a new account.
      */
-    public void showAccountPopup() {
+    @FXML
+    private void showAccountPopup() {
         Stage popupStage = new Stage();
         popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setTitle("Add New Account");
@@ -122,8 +121,8 @@ public class AccountController {
      */
     private GridPane createAccountForm(Stage popupStage) {
         GridPane grid = new GridPane();
-        grid.setPadding(new Insets(10));
-        grid.setVgap(10);
+        grid.setPadding(new Insets(20));
+        grid.setVgap(15);
         grid.setHgap(10);
 
         Label nameLabel = new Label("Account Name:");
@@ -144,6 +143,8 @@ public class AccountController {
         cancelButton.setOnAction(e -> popupStage.close());
 
         HBox buttonBox = new HBox(10, saveButton, cancelButton);
+        buttonBox.setAlignment(Pos.CENTER_RIGHT);
+
         grid.addRow(0, nameLabel, nameField);
         grid.addRow(1, dateLabel, datePicker);
         grid.addRow(2, balanceLabel, balanceField);
@@ -155,18 +156,23 @@ public class AccountController {
     /**
      * Handles the save operation when a new account is added.
      *
-     * @param nameField   The field containing the account name.
-     * @param datePicker  The DatePicker for selecting the opening date.
+     * @param nameField    The field containing the account name.
+     * @param datePicker   The DatePicker for selecting the opening date.
      * @param balanceField The field containing the opening balance.
-     * @param popupStage  The pop-up stage to close after saving.
+     * @param popupStage   The pop-up stage to close after saving.
      */
     private void handleSave(TextField nameField, DatePicker datePicker, TextField balanceField, Stage popupStage) {
-        String name = nameField.getText();
+        String name = nameField.getText().trim();
         LocalDate date = datePicker.getValue();
-        String balanceText = balanceField.getText();
+        String balanceText = balanceField.getText().trim();
 
         if (name.isEmpty() || date == null || balanceText.isEmpty()) {
             showAlert("Error", "All fields must be filled.");
+            return;
+        }
+
+        if (accountDatabase.accountNameExists(name)) {
+            showAlert("Error", "An account with this name already exists.");
             return;
         }
 
@@ -191,6 +197,7 @@ public class AccountController {
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
+        alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
     }

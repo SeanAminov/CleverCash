@@ -1,15 +1,15 @@
 package application.controller;
 
-import java.io.IOException;
-import java.net.URL;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
+import java.io.IOException;
+import java.net.URL;
 
 /**
  * The MainController class handles the main navigation and management of different pages
- * within the application, allowing users to switch between various views such as Home, 
+ * within the application, allowing users to switch between various views such as Home,
  * Accounts, Transactions, Reports, and Settings.
  */
 public class MainController {

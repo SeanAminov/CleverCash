@@ -1,15 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="accountBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="745.0" prefWidth="1210.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.AccountController">
    <children>
-      <Button layoutX="484.0" layoutY="40.0" mnemonicParsing="false" onMouseClicked="#showAccountPopup" prefHeight="70.0" prefWidth="245.0" text="Add Account">
+      <!-- Add Account Button -->
+      <Button fx:id="addAccountButton" layoutX="360.0" layoutY="40.0" mnemonicParsing="false" onAction="#showAccountPopup" prefHeight="70.0" prefWidth="245.0" text="Add Account">
          <font>
             <Font name="Myanmar Text Bold" size="25.0" />
          </font>
       </Button>
+      <!-- Delete All Accounts Button -->
+      <Button fx:id="deleteAllButton" layoutX="630.0" layoutY="40.0" mnemonicParsing="false" onAction="#handleDeleteAllAccounts" prefHeight="70.0" prefWidth="260.0" text="Delete All Accounts">
+         <font>
+            <Font name="Myanmar Text Bold" size="25.0" />
+         </font>
+      </Button>
+      <!-- Accounts TableView -->
+      <TableView fx:id="tableView" layoutX="82.0" layoutY="209.0" prefHeight="473.0" prefWidth="1050.0">
+        <columns>
+          <TableColumn fx:id="nameCol" prefWidth="350.0" text="Account Name" />
+          <TableColumn fx:id="dateCol" prefWidth="350.0" text="Opening Date" />
+          <TableColumn fx:id="balanceCol" prefWidth="350.0" text="Opening Balance" />
+        </columns>
+      </TableView>
    </children>
 </AnchorPane>

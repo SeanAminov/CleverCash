@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="accountBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="745.0" prefWidth="1210.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.AccountController">
+   <children>
+      <Button layoutX="484.0" layoutY="40.0" mnemonicParsing="false" onMouseClicked="#showAccountPopup" prefHeight="70.0" prefWidth="245.0" text="Add Account">
+         <font>
+            <Font name="Myanmar Text Bold" size="25.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

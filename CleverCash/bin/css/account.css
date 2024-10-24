@@ -1,0 +1,25 @@
+.popup-label {
+    -fx-font-size: 14px;
+}
+
+.popup-text-field {
+    -fx-font-size: 14px;
+    -fx-pref-height: 30px;
+}
+
+.popup-date-picker {
+    -fx-font-size: 14px;
+    -fx-pref-height: 30px;
+}
+
+.popup-button {
+    -fx-font-size: 14px;
+    -fx-pref-width: 100px;
+    -fx-pref-height: 35px;
+}
+
+.popup-grid {
+    -fx-padding: 20px;
+    -fx-hgap: 15px;
+    -fx-vgap: 15px;
+}

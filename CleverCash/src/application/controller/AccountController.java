@@ -103,7 +103,7 @@ public class AccountController {
     @FXML
     private void showAccountPopup() {
         Stage popupStage = new Stage();
-        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.initModality(Modality.APPLICATION_MODAL); // blocks from editing other windows
         popupStage.setTitle("Add New Account");
 
         GridPane form = createAccountForm(popupStage);

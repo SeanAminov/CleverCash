@@ -1,4 +1,4 @@
-package application;
+package application.model;
 
 import java.time.LocalDate;
 
@@ -6,7 +6,7 @@ import java.time.LocalDate;
  * The Account class represents a financial account with a name, opening date, 
  * and an opening balance. It provides access to account details through getter methods.
  */
-public class Account {
+public class AccountBean {
 
     /** The name of the account. */
     private String name;
@@ -24,7 +24,7 @@ public class Account {
      * @param openingDate    The date the account was opened.
      * @param openingBalance The initial balance of the account.
      */
-    public Account(String name, LocalDate openingDate, double openingBalance) {
+    public AccountBean(String name, LocalDate openingDate, double openingBalance) {
         this.name = name;
         this.openingDate = openingDate;
         this.openingBalance = openingBalance;

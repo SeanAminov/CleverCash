@@ -32,9 +32,9 @@
                   <Image url="@../../src/application/icons/close2.png" />
                </image>
             </ImageView>
-            <Label layoutX="84.0" layoutY="-2.0" prefHeight="36.0" prefWidth="143.0" text="Clever Cash">
+            <Label layoutX="82.0" layoutY="10.0" prefHeight="36.0" prefWidth="143.0" text="Clever Cash">
                <font>
-                  <Font name="Myanmar Text" size="25.0" />
+                  <Font name="Yu Gothic UI Semibold" size="25.0" />
                </font>
             </Label>
          </children>

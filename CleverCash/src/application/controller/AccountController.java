@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import java.time.LocalDate;
@@ -104,12 +105,12 @@ public class AccountController {
     @FXML
     private void showAccountPopup() {
         Stage popupStage = new Stage();
+        popupStage.setResizable(false);
         popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setTitle("Add New Account");
-
-        GridPane form = createAccountForm(popupStage);
+        VBox form = createAccountForm(popupStage);
         Scene popupScene = new Scene(form, 400, 300);
-
+        popupScene.getStylesheets().add(getClass().getResource("/css/account.css").toExternalForm());
         popupStage.setScene(popupScene);
         popupStage.show();
     }
@@ -118,40 +119,55 @@ public class AccountController {
      * Creates a form layout for adding a new account.
      *
      * @param popupStage The pop-up stage to close after saving.
-     * @return A GridPane containing the form fields.
+     * @return A VBox containing the form fields and buttons.
      */
-    private GridPane createAccountForm(Stage popupStage) {
+    private VBox createAccountForm(Stage popupStage) {
+        // Create the GridPane for the form
         GridPane grid = new GridPane();
-        grid.setPadding(new Insets(20));
-        grid.setVgap(15);
-        grid.setHgap(10);
+        grid.getStyleClass().add("popup-grid");
 
         Label nameLabel = new Label("Account Name:");
+        nameLabel.getStyleClass().add("popup-label");
         TextField nameField = new TextField();
+        nameField.getStyleClass().add("popup-text-field");
         nameField.setPromptText("Enter account name");
 
         Label dateLabel = new Label("Opening Date:");
+        dateLabel.getStyleClass().add("popup-label");
         DatePicker datePicker = new DatePicker(LocalDate.now());
+        datePicker.getStyleClass().add("popup-date-picker");
 
         Label balanceLabel = new Label("Opening Balance:");
+        balanceLabel.getStyleClass().add("popup-label");
         TextField balanceField = new TextField();
+        balanceField.getStyleClass().add("popup-text-field");
         balanceField.setPromptText("Enter opening balance");
 
-        Button saveButton = new Button("Save");
-        saveButton.setOnAction(e -> handleSave(nameField, datePicker, balanceField, popupStage));
-
-        Button cancelButton = new Button("Cancel");
-        cancelButton.setOnAction(e -> popupStage.close());
-
-        HBox buttonBox = new HBox(10, saveButton, cancelButton);
-        buttonBox.setAlignment(Pos.CENTER_RIGHT);
-
+        // Add elements to the GridPane
         grid.addRow(0, nameLabel, nameField);
         grid.addRow(1, dateLabel, datePicker);
         grid.addRow(2, balanceLabel, balanceField);
-        grid.add(buttonBox, 1, 3);
 
-        return grid;
+        // Create the Save and Cancel buttons
+        Button saveButton = new Button("Save");
+        saveButton.getStyleClass().add("popup-button");
+        saveButton.setOnAction(e -> handleSave(nameField, datePicker, balanceField, popupStage));
+
+        Button cancelButton = new Button("Cancel");
+        cancelButton.getStyleClass().add("popup-button");
+        cancelButton.setOnAction(e -> popupStage.close());
+
+        // Create an HBox to center the buttons
+        HBox buttonBox = new HBox(20, saveButton, cancelButton);
+        buttonBox.setAlignment(Pos.CENTER);
+        buttonBox.setPadding(new Insets(20, 0, 0, 0)); // Add some space between the form and the buttons
+
+        // Use a VBox to position the form and buttons
+        VBox vbox = new VBox(10, grid, buttonBox);
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setPadding(new Insets(20));
+
+        return vbox;
     }
 
     /**

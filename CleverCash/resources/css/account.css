@@ -19,7 +19,7 @@
 }
 
 .popup-grid {
-    -fx-padding: 20px;
+    -fx-padding: 15px;
     -fx-hgap: 18px;
     -fx-vgap: 22px;
 }

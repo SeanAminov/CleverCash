@@ -17,17 +17,12 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JAVAFX23">
+	<classpathentry kind="lib" path="lib/sqlite-jdbc-3.47.0.0.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="src/libs/slf4j-api-2.0.16.jar">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="src/libs/sqlite-jdbc-3.47.0.0.jar">
+	<classpathentry kind="lib" path="lib/slf4j-api-2.0.16.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>

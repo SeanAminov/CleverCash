@@ -1,29 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="745.0" prefWidth="1210.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="transactionBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.TransactionController">
    <children>
-      <TableView fx:id="tableView1" layoutX="80.0" layoutY="318.0" prefHeight="200.0" prefWidth="1050.0" style="-fx-border-color: black;">
+      <!-- Centered Action Buttons -->
+      <HBox alignment="CENTER" layoutX="88.0" layoutY="29.0" prefHeight="55.0" prefWidth="876.0" spacing="20">
+         <children>
+            <Button fx:id="addTransactionButton" mnemonicParsing="false" onAction="#handleAddTransaction" prefHeight="35.0" prefWidth="150.0" style="-fx-font-size: 14px;" text="Add Transaction" />
+            <Button fx:id="addScheduledTransactionButton" mnemonicParsing="false" onAction="#handleAddScheduledTransaction" prefHeight="35.0" prefWidth="180.0" style="-fx-font-size: 14px;" text="Add Scheduled Transaction" />
+            <Button fx:id="clearTransactionsButton" mnemonicParsing="false" onAction="#handleClearTransactions" prefHeight="35.0" prefWidth="150.0" style="-fx-font-size: 14px;" text="Clear Transactions" />
+            <Button fx:id="clearScheduledTransactionsButton" mnemonicParsing="false" onAction="#handleClearScheduledTransactions" prefHeight="35.0" prefWidth="191.0" style="-fx-font-size: 14px;" text="Clear Scheduled Transactions" />
+         </children>
+      </HBox>
+
+      <!-- Transactions TableView -->
+      <TableView fx:id="transactionTableView" layoutX="50.0" layoutY="100.0" prefHeight="300.0" prefWidth="951.0">
          <columns>
-            <TableColumn fx:id="nameCol1" prefWidth="175.0" text="Schedule's Name" />
-            <TableColumn fx:id="nameCol11" prefWidth="175.0" text="Account" />
-            <TableColumn fx:id="nameCol12" prefWidth="175.0" text="Transaction Type" />
-            <TableColumn fx:id="nameCol13" prefWidth="175.0" text="Frequency" />
-            <TableColumn fx:id="nameCol14" prefWidth="175.0" text="Due Date" />
-            <TableColumn fx:id="nameCol15" prefWidth="175.0" text="Payment Amount" />
+            <TableColumn fx:id="accountCol" prefWidth="150.0" text="Account" />
+            <TableColumn fx:id="transactionTypeCol" prefWidth="150.0" text="Transaction Type" />
+            <TableColumn fx:id="transactionDateCol" prefWidth="150.0" text="Transaction Date" />
+            <TableColumn fx:id="transactionDescriptionCol" prefWidth="200.0" text="Description" />
+            <TableColumn fx:id="paymentAmountCol" prefWidth="150.0" text="Payment Amount" />
+            <TableColumn fx:id="depositAmountCol" prefWidth="150.0" text="Deposit Amount" />
          </columns>
       </TableView>
-      <TableView fx:id="tableView11" layoutX="80.0" layoutY="531.0" prefHeight="200.0" prefWidth="1050.0" style="-fx-border-color: black;">
+      
+      <!-- Scheduled Transactions TableView -->
+      <TableView fx:id="scheduledTransactionTableView" layoutX="75.0" layoutY="448.0" prefHeight="250.0" prefWidth="901.0">
          <columns>
-            <TableColumn fx:id="nameCol112" prefWidth="175.0" text="Account" />
-            <TableColumn fx:id="nameCol111" prefWidth="175.0" text="Transaction Type" />
-            <TableColumn fx:id="nameCol121" prefWidth="175.0" text="Transaction Date" />
-            <TableColumn fx:id="nameCol131" prefWidth="175.0" text="Transaction Description" />
-            <TableColumn fx:id="nameCol141" prefWidth="175.0" text="Payment Amount" />
-            <TableColumn fx:id="nameCol151" prefWidth="175.0" text="Deposit Amount" />
+            <TableColumn fx:id="scheduleNameCol" prefWidth="150.0" text="Schedule Name" />
+            <TableColumn fx:id="scheduledAccountCol" prefWidth="150.0" text="Account" />
+            <TableColumn fx:id="scheduledTransactionTypeCol" prefWidth="150.0" text="Transaction Type" />
+            <TableColumn fx:id="frequencyCol" prefWidth="150.0" text="Frequency" />
+            <TableColumn fx:id="dueDateCol" prefWidth="150.0" text="Due Date" />
+            <TableColumn fx:id="scheduledPaymentAmountCol" prefWidth="150.0" text="Payment Amount" />
          </columns>
       </TableView>
    </children>

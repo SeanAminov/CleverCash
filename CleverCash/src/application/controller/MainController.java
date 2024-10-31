@@ -88,6 +88,7 @@ public class MainController {
     public void showTransactionPage() {
         loadPage("/view/Transactions.fxml");
     }
+    
 
     @FXML
     public void showReportPage() {

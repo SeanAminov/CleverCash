@@ -36,110 +36,50 @@ public class TransactionBean {
 
     // Getters and setters
 
-    /**
-     * Gets the account name associated with this transaction.
-     *
-     * @return the account name.
-     */
     public String getAccount() {
         return account;
     }
 
-    /**
-     * Sets the account name for this transaction.
-     *
-     * @param account the account name to set.
-     */
     public void setAccount(String account) {
         this.account = account;
     }
 
-    /**
-     * Gets the type of this transaction.
-     *
-     * @return the transaction type.
-     */
     public String getTransactionType() {
         return transactionType;
     }
 
-    /**
-     * Sets the type of this transaction.
-     *
-     * @param transactionType the transaction type to set.
-     */
     public void setTransactionType(String transactionType) {
         this.transactionType = transactionType;
     }
 
-    /**
-     * Gets the date of this transaction.
-     *
-     * @return the transaction date.
-     */
     public LocalDate getTransactionDate() {
         return transactionDate;
     }
 
-    /**
-     * Sets the date of this transaction.
-     *
-     * @param transactionDate the transaction date to set.
-     */
     public void setTransactionDate(LocalDate transactionDate) {
         this.transactionDate = transactionDate;
     }
 
-    /**
-     * Gets the description of this transaction.
-     *
-     * @return the transaction description.
-     */
     public String getTransactionDescription() {
         return transactionDescription;
     }
 
-    /**
-     * Sets the description of this transaction.
-     *
-     * @param transactionDescription the description to set for the transaction.
-     */
     public void setTransactionDescription(String transactionDescription) {
         this.transactionDescription = transactionDescription;
     }
 
-    /**
-     * Gets the payment amount of this transaction.
-     *
-     * @return the payment amount.
-     */
     public Double getPaymentAmount() {
         return paymentAmount;
     }
 
-    /**
-     * Sets the payment amount of this transaction.
-     *
-     * @param paymentAmount the payment amount to set.
-     */
     public void setPaymentAmount(Double paymentAmount) {
         this.paymentAmount = paymentAmount;
     }
 
-    /**
-     * Gets the deposit amount of this transaction.
-     *
-     * @return the deposit amount.
-     */
     public Double getDepositAmount() {
         return depositAmount;
     }
 
-    /**
-     * Sets the deposit amount of this transaction.
-     *
-     * @param depositAmount the deposit amount to set.
-     */
     public void setDepositAmount(Double depositAmount) {
         this.depositAmount = depositAmount;
     }

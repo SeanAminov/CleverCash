@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 /**
  * TransactionDatabase manages database operations for transactions and scheduled transactions.
- * It includes methods to add, retrieve, and clear transactions from the SQLite database.
+ * It includes methods to add and retrieve transactions from the SQLite database.
  */
 public class TransactionDatabase {
     // Path to the SQLite database file
@@ -39,7 +39,6 @@ public class TransactionDatabase {
     private void createTransactionTable() {
         String sql = """
             CREATE TABLE IF NOT EXISTS transactions (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 account TEXT NOT NULL,
                 transactionType TEXT NOT NULL,
                 transactionDate TEXT NOT NULL,
@@ -63,7 +62,6 @@ public class TransactionDatabase {
     private void createScheduledTransactionTable() {
         String sql = """
             CREATE TABLE IF NOT EXISTS scheduled_transactions (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 scheduleName TEXT UNIQUE NOT NULL,
                 account TEXT NOT NULL,
                 transactionType TEXT NOT NULL,
@@ -182,26 +180,37 @@ public class TransactionDatabase {
     }
 
     /**
-     * Clears all records from the 'transactions' table.
+     * Deletes a transaction from the 'transactions' table based on specific fields.
+     * @param transaction the TransactionBean to be deleted.
      */
-    public void clearAllTransactions() {
-        String sql = "DELETE FROM transactions";
+    public void deleteTransaction(TransactionBean transaction) {
+        String sql = "DELETE FROM transactions WHERE account = ? AND transactionType = ? AND transactionDate = ? AND transactionDescription = ? AND paymentAmount = ? AND depositAmount = ?";
+
         try (Connection conn = connect();
-             Statement stmt = conn.createStatement()) {
-            stmt.executeUpdate(sql);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, transaction.getAccount());
+            pstmt.setString(2, transaction.getTransactionType());
+            pstmt.setString(3, transaction.getTransactionDate().toString());
+            pstmt.setString(4, transaction.getTransactionDescription());
+            pstmt.setDouble(5, transaction.getPaymentAmount() != null ? transaction.getPaymentAmount() : 0);
+            pstmt.setDouble(6, transaction.getDepositAmount() != null ? transaction.getDepositAmount() : 0);
+            pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * Clears all records from the 'scheduled_transactions' table.
+     * Deletes a scheduled transaction from the 'scheduled_transactions' table based on schedule name.
+     * @param scheduledTransaction the ScheduledTransactionBean to be deleted.
      */
-    public void clearAllScheduledTransactions() {
-        String sql = "DELETE FROM scheduled_transactions";
+    public void deleteScheduledTransaction(ScheduledTransactionBean scheduledTransaction) {
+        String sql = "DELETE FROM scheduled_transactions WHERE scheduleName = ?";
+
         try (Connection conn = connect();
-             Statement stmt = conn.createStatement()) {
-            stmt.executeUpdate(sql);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, scheduledTransaction.getScheduleName());
+            pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -12,27 +12,16 @@ import java.time.LocalDate;
  */
 public class AccountDatabase {
 
-	private static final String DB_URL = "jdbc:sqlite:src/application/database/accounts.db";
+    private static final String DB_URL = "jdbc:sqlite:src/application/database/accounts.db";
 
-    /**
-     * Constructor to initialize the database. It creates the 'accounts' table if it doesn't exist.
-     */
     public AccountDatabase() {
         createTableIfNotExists();
     }
-    /**
-     * Establishes a connection to the SQLite database.
-     *
-     * @return A {@link Connection} to the SQLite database.
-     * @throws SQLException if a database access error occurs.
-     */
+
     private Connection connect() throws SQLException {
         return DriverManager.getConnection(DB_URL);
     }
 
-    /**
-     * Creates the 'accounts' table if it doesn't exist.
-     */
     private void createTableIfNotExists() {
         String sql = """
                 CREATE TABLE IF NOT EXISTS accounts (
@@ -99,11 +88,19 @@ public class AccountDatabase {
         return false;
     }
 
-    /**
-     * Retrieves all accounts from the database, sorted by opening date in descending order.
-     *
-     * @return An {@link ObservableList} of {@link AccountBean} containing all accounts.
-     */
+    public void deleteAccount(String name) {
+        String sql = "DELETE FROM accounts WHERE name = ?";
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, name);
+            pstmt.executeUpdate();
+            System.out.println("Account deleted: " + name);
+        } catch (SQLException e) {
+            System.err.println("Failed to delete account: " + name);
+            e.printStackTrace();
+        }
+    }
+
     public ObservableList<AccountBean> getAllAccounts() {
         ObservableList<AccountBean> accounts = FXCollections.observableArrayList();
         String sql = "SELECT * FROM accounts ORDER BY openingDate DESC";
@@ -127,23 +124,5 @@ public class AccountDatabase {
         }
 
         return accounts;
-    }
-
-    /**
-     * Clears all accounts from the database without deleting the database file.
-     */
-    public void clearAllAccounts() {
-        String sql = "DELETE FROM accounts";
-
-        try (Connection conn = connect();
-             Statement stmt = conn.createStatement()) {
-
-            stmt.executeUpdate(sql);
-            System.out.println("All accounts have been cleared.");
-
-        } catch (SQLException e) {
-            System.err.println("Failed to clear accounts.");
-            e.printStackTrace();
-        }
     }
 }

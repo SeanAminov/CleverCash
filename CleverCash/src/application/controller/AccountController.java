@@ -6,33 +6,33 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
+import javafx.stage.Modality;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  * The AccountController manages the Accounts page and displays stored accounts
- * using a TableView, allowing users to view, add, and delete accounts.
+ * using a TableView, allowing users to view, add, and delete accounts individually.
  */
 public class AccountController {
 
-    private final AccountDatabase accountDatabase = new AccountDatabase(); // Database instance
+    private final AccountDatabase accountDatabase = new AccountDatabase();
 
     @FXML
-    private AnchorPane accountBox; // Root layout from FXML
+    private AnchorPane accountBox;
 
     @FXML
     private Button addAccountButton;
-
-    @FXML
-    private Button deleteAllButton;
 
     @FXML
     private TableView<AccountBean> tableView;
@@ -46,26 +46,99 @@ public class AccountController {
     @FXML
     private TableColumn<AccountBean, Double> balanceCol;
 
-    /**
-     * Initializes the controller class. This method is automatically called
-     * after the FXML file has been loaded.
-     */
+    @FXML
+    private TableColumn<AccountBean, Void> deleteCol;
+
+    // Define a DateTimeFormatter with the desired pattern
+    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
+
     @FXML
     public void initialize() {
         setupAccountTableView();
         refreshTableData();
+        applyFontScaling(tableView);  // Apply font scaling to the account table
     }
 
-    /**
-     * Sets up the TableView with columns for displaying account information.
-     */
+    // Method to apply font scaling to a TableView
+    private void applyFontScaling(TableView<?> tableView) {
+        tableView.setStyle("-fx-font-size: 16px;");
+    }
+
     private void setupAccountTableView() {
         nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         dateCol.setCellValueFactory(new PropertyValueFactory<>("openingDate"));
         balanceCol.setCellValueFactory(new PropertyValueFactory<>("openingBalance"));
 
-        // Format the balance to two decimal places
-        balanceCol.setCellFactory(column -> new TableCell<AccountBean, Double>() {
+        // Set font size for each cell in nameCol, dateCol, and balanceCol
+        nameCol.setCellFactory(column -> createStyledCellForString());
+        dateCol.setCellFactory(column -> createStyledCellForDate());
+        balanceCol.setCellFactory(column -> createStyledCellForDouble());
+
+        // Set up delete button with an icon in each row of deleteCol
+        deleteCol.setCellFactory(col -> new TableCell<>() {
+            private final Button deleteButton = new Button();
+
+            {
+                Image deleteIcon = new Image(getClass().getResourceAsStream("/application/icons/delete.png"));
+                ImageView deleteIconView = new ImageView(deleteIcon);
+                deleteIconView.setFitHeight(40); // 2.5 times larger
+                deleteIconView.setFitWidth(40);  // 2.5 times larger
+                deleteButton.setGraphic(deleteIconView);
+
+                deleteButton.setOnAction(event -> {
+                    AccountBean account = getTableView().getItems().get(getIndex());
+                    handleDeleteAccount(account);
+                });
+
+                deleteButton.setStyle("-fx-background-color: transparent; -fx-padding: 5px;");
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(deleteButton);
+                    setStyle("-fx-alignment: CENTER;"); // Center the content of the cell
+                }
+            }
+        });
+    }
+
+    private TableCell<AccountBean, String> createStyledCellForString() {
+        return new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item);
+                }
+                setStyle("-fx-font-size: 32px;");
+            }
+        };
+    }
+
+    private TableCell<AccountBean, LocalDate> createStyledCellForDate() {
+        return new TableCell<>() {
+            @Override
+            protected void updateItem(LocalDate item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    // Format the LocalDate to "MMM. dd, yyyy"
+                    setText(item.format(dateFormatter));
+                }
+                setStyle("-fx-font-size: 32px;");
+            }
+        };
+    }
+
+    private TableCell<AccountBean, Double> createStyledCellForDouble() {
+        return new TableCell<>() {
             @Override
             protected void updateItem(Double item, boolean empty) {
                 super.updateItem(item, empty);
@@ -74,63 +147,69 @@ public class AccountController {
                 } else {
                     setText(String.format("%.2f", item));
                 }
+                setStyle("-fx-font-size: 32px;");
             }
-        });
+        };
     }
 
-    /**
-     * Refreshes the TableView with the latest account data from the database.
-     */
     private void refreshTableData() {
         ObservableList<AccountBean> accounts = accountDatabase.getAllAccounts();
         tableView.setItems(accounts);
-        tableView.refresh(); // Ensure the table view gets updated
+        tableView.refresh();
         System.out.println("TableView refreshed with " + accounts.size() + " accounts.");
     }
 
-    /**
-     * Handles clearing all accounts from the database and refreshing the table.
-     * This method now only deletes the account records without deleting the database file.
-     */
-    @FXML
-    private void handleDeleteAllAccounts() {
-        accountDatabase.clearAllAccounts();
-        refreshTableData(); // Refresh the TableView after clearing
-        showAlert("Success", "All accounts have been cleared.");
+    private void handleDeleteAccount(AccountBean account) {
+        boolean confirmation = showConfirmation("Confirm Deletion", "Are you sure you want to delete the account: " + account.getName() + "?");
+        if (confirmation) {
+            accountDatabase.deleteAccount(account.getName());
+            refreshTableData();
+            showAlert("Success", "Account deleted successfully!");
+        }
     }
 
-    /**
-     * Displays a pop-up form to add a new account.
-     */
+    private boolean showConfirmation(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        return alert.showAndWait().filter(response -> response == ButtonType.OK).isPresent();
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
     @FXML
     private void showAccountPopup() {
         Stage popupStage = new Stage();
         popupStage.setResizable(false);
         popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setTitle("Add New Account");
+
+        // Always create a new VBox instance each time the popup is shown
         VBox form = createAccountForm(popupStage);
+
         Scene popupScene = new Scene(form, 400, 300);
         popupScene.getStylesheets().add(getClass().getResource("/css/account.css").toExternalForm());
+
         popupStage.setScene(popupScene);
         popupStage.show();
     }
 
-    /**
-     * Creates a form layout for adding a new account.
-     *
-     * @param popupStage The pop-up stage to close after saving.
-     * @return A VBox containing the form fields and buttons.
-     */
     private VBox createAccountForm(Stage popupStage) {
-        // Create the GridPane for the form
         GridPane grid = new GridPane();
         grid.getStyleClass().add("popup-grid");
 
         Label nameLabel = new Label("Account Name:");
         nameLabel.getStyleClass().add("popup-label");
         TextField nameField = new TextField();
-        nameField.getStyleClass().add("popup-text-field");
         nameField.setPromptText("Enter account name");
+        nameField.getStyleClass().add("popup-text-field");
 
         Label dateLabel = new Label("Opening Date:");
         dateLabel.getStyleClass().add("popup-label");
@@ -140,29 +219,25 @@ public class AccountController {
         Label balanceLabel = new Label("Opening Balance:");
         balanceLabel.getStyleClass().add("popup-label");
         TextField balanceField = new TextField();
-        balanceField.getStyleClass().add("popup-text-field");
         balanceField.setPromptText("Enter opening balance");
+        balanceField.getStyleClass().add("popup-text-field");
 
-        // Add elements to the GridPane
         grid.addRow(0, nameLabel, nameField);
         grid.addRow(1, dateLabel, datePicker);
         grid.addRow(2, balanceLabel, balanceField);
 
-        // Create the Save and Cancel buttons
         Button saveButton = new Button("Save");
-        saveButton.getStyleClass().add("popup-button");
         saveButton.setOnAction(e -> handleSave(nameField, datePicker, balanceField, popupStage));
+        saveButton.getStyleClass().add("popup-button");
 
         Button cancelButton = new Button("Cancel");
-        cancelButton.getStyleClass().add("popup-button");
         cancelButton.setOnAction(e -> popupStage.close());
+        cancelButton.getStyleClass().add("popup-button");
 
-        // Create an HBox to center the buttons
         HBox buttonBox = new HBox(20, saveButton, cancelButton);
         buttonBox.setAlignment(Pos.CENTER);
-        buttonBox.setPadding(new Insets(20, 0, 0, 0)); // Add some space between the form and the buttons
+        buttonBox.setPadding(new Insets(20, 0, 0, 0));
 
-        // Use a VBox to position the form and buttons
         VBox vbox = new VBox(10, grid, buttonBox);
         vbox.setAlignment(Pos.CENTER);
         vbox.setPadding(new Insets(20));
@@ -170,14 +245,6 @@ public class AccountController {
         return vbox;
     }
 
-    /**
-     * Handles the save operation when a new account is added.
-     *
-     * @param nameField    The field containing the account name.
-     * @param datePicker   The DatePicker for selecting the opening date.
-     * @param balanceField The field containing the opening balance.
-     * @param popupStage   The pop-up stage to close after saving.
-     */
     private void handleSave(TextField nameField, DatePicker datePicker, TextField balanceField, Stage popupStage) {
         String name = nameField.getText().trim();
         LocalDate date = datePicker.getValue();
@@ -197,25 +264,11 @@ public class AccountController {
             double balance = Double.parseDouble(balanceText);
             AccountBean newAccount = new AccountBean(name, date, balance);
             accountDatabase.addAccount(newAccount);
-            refreshTableData(); // Refresh the TableView
+            refreshTableData();
             showAlert("Success", "Account added successfully!");
-            popupStage.close(); // Close the pop-up window
+            popupStage.close();
         } catch (NumberFormatException e) {
             showAlert("Error", "Opening balance must be a valid number.");
         }
-    }
-
-    /**
-     * Displays an alert dialog with the given title and message.
-     *
-     * @param title   The title of the alert dialog.
-     * @param message The message to display.
-     */
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 }

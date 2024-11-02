@@ -29,13 +29,12 @@ public class TransactionDatabase {
     /**
      * Constructor that initializes the database by creating the transactions,
      * scheduled transactions, and transaction types tables if they do not exist.
-     * It also clears all transaction types upon startup.
      */
     public TransactionDatabase() {
         createTransactionTable();
         createScheduledTransactionTable();
         createTransactionTypeTable();
-        clearTransactionTypes(); // Clear all transaction types on startup
+        // Do not clear transaction types here
     }
 
     /**
@@ -98,20 +97,7 @@ public class TransactionDatabase {
              Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
             // No default transaction types are inserted
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Clears all transaction types from the 'transaction_types' table.
-     */
-    private void clearTransactionTypes() {
-        String sql = "DELETE FROM transaction_types";
-        try (Connection conn = connect();
-             Statement stmt = conn.createStatement()) {
-            stmt.execute(sql);
-            System.out.println("All transaction types have been cleared.");
+            // Do not clear transaction types here
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -330,34 +316,6 @@ public class TransactionDatabase {
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, scheduledTransaction.getScheduleName());
             pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Clears all transactions from the 'transactions' table.
-     */
-    public void clearTransactions() {
-        String sql = "DELETE FROM transactions";
-        try (Connection conn = connect();
-             Statement stmt = conn.createStatement()) {
-            stmt.execute(sql);
-            System.out.println("All transactions have been cleared.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Clears all scheduled transactions from the 'scheduled_transactions' table.
-     */
-    public void clearScheduledTransactions() {
-        String sql = "DELETE FROM scheduled_transactions";
-        try (Connection conn = connect();
-             Statement stmt = conn.createStatement()) {
-            stmt.execute(sql);
-            System.out.println("All scheduled transactions have been cleared.");
         } catch (SQLException e) {
             e.printStackTrace();
         }

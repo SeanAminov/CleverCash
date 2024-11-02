@@ -83,12 +83,16 @@ public class MainController {
     public void showAccountPage() {
         loadPage("/view/Accounts.fxml");
     }
+    
+    @FXML
+    public void showTransactionTypePage() {
+        loadPage("/view/TransactionType.fxml");
+    }
 
     @FXML
     public void showTransactionPage() {
         loadPage("/view/Transactions.fxml");
     }
-    
 
     @FXML
     public void showReportPage() {

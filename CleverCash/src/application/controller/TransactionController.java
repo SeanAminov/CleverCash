@@ -22,6 +22,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.sql.SQLException;
 
 public class TransactionController {
 
@@ -263,10 +264,7 @@ public class TransactionController {
         transactionTypeLabel.getStyleClass().add("popup-label");
 
         ComboBox<String> transactionTypeComboBox = new ComboBox<>();
-        transactionTypeComboBox.getItems().addAll(
-                "House", "Car", "Kids", "Education", "Food", "Health",
-                "Travel", "Entertainment", "Utilities", "Miscellaneous"
-        );
+        transactionTypeComboBox.setItems(transactionDatabase.getAllTransactionTypes());
         transactionTypeComboBox.getSelectionModel().selectFirst();
         transactionTypeComboBox.getStyleClass().add("popup-text-field");
 
@@ -299,8 +297,9 @@ public class TransactionController {
         saveButton.setOnAction(e -> {
             try {
                 if (accountComboBox.getValue() == null || transactionTypeComboBox.getValue() == null ||
+                        descriptionField.getText().trim().isEmpty() ||
                         (paymentField.getText().isEmpty() && depositField.getText().isEmpty())) {
-                    showAlert("Error", "Please fill in at least one of the 'Payment Amount' or 'Deposit Amount' fields.");
+                    showAlert("Error", "All fields must be filled in, including 'Description' and either 'Payment Amount' or 'Deposit Amount'.");
                     return;
                 }
 
@@ -367,10 +366,7 @@ public class TransactionController {
         transactionTypeLabel.getStyleClass().add("popup-label");
 
         ComboBox<String> transactionTypeComboBox = new ComboBox<>();
-        transactionTypeComboBox.getItems().addAll(
-                "House", "Car", "Kids", "Education", "Food", "Health",
-                "Travel", "Entertainment", "Utilities", "Miscellaneous"
-        );
+        transactionTypeComboBox.setItems(transactionDatabase.getAllTransactionTypes());
         transactionTypeComboBox.getSelectionModel().selectFirst();
         transactionTypeComboBox.getStyleClass().add("popup-text-field");
 
@@ -442,10 +438,21 @@ public class TransactionController {
 
             double paymentAmount = Double.parseDouble(paymentText);
             ScheduledTransactionBean scheduledTransaction = new ScheduledTransactionBean(scheduleName, account, transactionType, frequency, dueDate, paymentAmount);
-            transactionDatabase.addScheduledTransaction(scheduledTransaction);
-            refreshScheduledTransactionTableData();
-            showAlert("Success", "Scheduled transaction added successfully!");
-            popupStage.close();
+
+            try {
+                transactionDatabase.addScheduledTransaction(scheduledTransaction);
+                refreshScheduledTransactionTableData();
+                showAlert("Success", "Scheduled transaction added successfully!");
+                popupStage.close();
+            } catch (SQLException e) {
+                if (e.getMessage().contains("UNIQUE constraint failed")) {
+                    showAlert("Duplicate Schedule Name", "A scheduled transaction with the name '" + scheduledTransaction.getScheduleName() + "' already exists. Please use a unique name.");
+                } else {
+                    e.printStackTrace();
+                    showAlert("Error Adding Scheduled Transaction", "An unexpected error occurred. Could not add the scheduled transaction. Please try again.");
+                }
+                scheduleNameField.requestFocus();
+            }
 
         } catch (NumberFormatException e) {
             showAlert("Error", "Due Date must be a valid integer, and Payment Amount must be a valid number.");

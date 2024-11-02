@@ -58,6 +58,11 @@
                         <Image url="@../../src/application/icons/accounts.png" />
                      </image>
                   </ImageView>
+                  <ImageView fitHeight="55.0" fitWidth="35.0" onMouseClicked="#showTransactionTypePage" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../src/application/icons/clipboard.png" />
+                     </image>
+                  </ImageView>
                   <ImageView fitHeight="55.0" fitWidth="35.0" onMouseClicked="#showTransactionPage" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../src/application/icons/transactions.png" />

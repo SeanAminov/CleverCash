@@ -6,10 +6,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * TransactionDatabase manages database operations for transactions and scheduled transactions.
- * It includes methods to add and retrieve transactions from the SQLite database.
+ * It includes methods to add, retrieve, and delete transactions from the SQLite database.
  */
 public class TransactionDatabase {
     // Path to the SQLite database file
@@ -25,12 +27,15 @@ public class TransactionDatabase {
     }
 
     /**
-     * Constructor that initializes the database by creating the transactions and
-     * scheduled transactions tables if they do not exist.
+     * Constructor that initializes the database by creating the transactions,
+     * scheduled transactions, and transaction types tables if they do not exist.
+     * It also clears all transaction types upon startup.
      */
     public TransactionDatabase() {
         createTransactionTable();
         createScheduledTransactionTable();
+        createTransactionTypeTable();
+        clearTransactionTypes(); // Clear all transaction types on startup
     }
 
     /**
@@ -80,6 +85,112 @@ public class TransactionDatabase {
     }
 
     /**
+     * Creates the 'transaction_types' table if it does not exist.
+     */
+    private void createTransactionTypeTable() {
+        String sql = """
+            CREATE TABLE IF NOT EXISTS transaction_types (
+                type TEXT UNIQUE NOT NULL
+            );
+            """;
+
+        try (Connection conn = connect();
+             Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+            // No default transaction types are inserted
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Clears all transaction types from the 'transaction_types' table.
+     */
+    private void clearTransactionTypes() {
+        String sql = "DELETE FROM transaction_types";
+        try (Connection conn = connect();
+             Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+            System.out.println("All transaction types have been cleared.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Adds a new transaction type to the 'transaction_types' table.
+     * @param type the name of the transaction type to add.
+     */
+    public void addTransactionType(String type) {
+        String sql = "INSERT INTO transaction_types (type) VALUES (?)";
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, type);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Checks if a transaction type exists in the 'transaction_types' table.
+     * @param type the transaction type to check.
+     * @return true if the transaction type exists, false otherwise.
+     */
+    public boolean transactionTypeExists(String type) {
+        String sql = "SELECT COUNT(*) FROM transaction_types WHERE type = ?";
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, type);
+            ResultSet rs = pstmt.executeQuery();
+            return rs.getInt(1) > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * Retrieves all transaction types from the 'transaction_types' table.
+     * @return an ObservableList of transaction type names.
+     */
+    public ObservableList<String> getAllTransactionTypes() {
+        ObservableList<String> types = FXCollections.observableArrayList();
+        String sql = "SELECT type FROM transaction_types ORDER BY type ASC";
+        try (Connection conn = connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                types.add(rs.getString("type"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return types;
+    }
+
+    /**
+     * Retrieves a map of transaction types to the total amount spent for each type.
+     * @return a Map with transaction type names as keys and total amounts as values.
+     */
+    public Map<String, Double> getTransactionTypeAmounts() {
+        Map<String, Double> dataMap = new HashMap<>();
+        String sql = "SELECT transactionType, SUM(paymentAmount) as totalAmount FROM transactions GROUP BY transactionType";
+        try (Connection conn = connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                String type = rs.getString("transactionType");
+                double amount = rs.getDouble("totalAmount");
+                dataMap.put(type, amount);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return dataMap;
+    }
+
+    /**
      * Adds a new transaction to the 'transactions' table.
      * @param transaction the TransactionBean object containing transaction details.
      */
@@ -102,32 +213,40 @@ public class TransactionDatabase {
 
     /**
      * Adds a new scheduled transaction to the 'scheduled_transactions' table.
+     * If a duplicate schedule name is detected, it throws an SQLException.
+     *
      * @param scheduledTransaction the ScheduledTransactionBean object containing scheduled transaction details.
+     * @throws SQLException if a database access error occurs or a duplicate schedule name exists.
      */
-    public void addScheduledTransaction(ScheduledTransactionBean scheduledTransaction) {
+    public void addScheduledTransaction(ScheduledTransactionBean scheduledTransaction) throws SQLException {
         String sql = "INSERT INTO scheduled_transactions (scheduleName, account, transactionType, frequency, dueDate, paymentAmount) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
             pstmt.setString(1, scheduledTransaction.getScheduleName());
             pstmt.setString(2, scheduledTransaction.getAccount());
             pstmt.setString(3, scheduledTransaction.getTransactionType());
             pstmt.setString(4, scheduledTransaction.getFrequency());
             pstmt.setInt(5, scheduledTransaction.getDueDate());
             pstmt.setDouble(6, scheduledTransaction.getPaymentAmount());
+
+            // Execute the insertion
             pstmt.executeUpdate();
+
         } catch (SQLException e) {
-            e.printStackTrace();
+            // Re-throw the exception to be handled by the caller
+            throw e;
         }
     }
 
     /**
-     * Retrieves all transactions from the 'transactions' table.
+     * Retrieves all transactions from the 'transactions' table, sorted by transactionDate in descending order.
      * @return an ObservableList of TransactionBean objects representing each transaction.
      */
     public ObservableList<TransactionBean> getAllTransactions() {
         ObservableList<TransactionBean> transactions = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM transactions";
+        String sql = "SELECT * FROM transactions ORDER BY transactionDate DESC"; // Sorting by date in descending order
 
         try (Connection conn = connect();
              Statement stmt = conn.createStatement();
@@ -151,12 +270,12 @@ public class TransactionDatabase {
     }
 
     /**
-     * Retrieves all scheduled transactions from the 'scheduled_transactions' table.
+     * Retrieves all scheduled transactions from the 'scheduled_transactions' table, sorted by ROWID in descending order.
      * @return an ObservableList of ScheduledTransactionBean objects representing each scheduled transaction.
      */
     public ObservableList<ScheduledTransactionBean> getAllScheduledTransactions() {
         ObservableList<ScheduledTransactionBean> scheduledTransactions = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM scheduled_transactions";
+        String sql = "SELECT * FROM scheduled_transactions ORDER BY ROWID DESC"; // Sorting by the latest addition at the top
 
         try (Connection conn = connect();
              Statement stmt = conn.createStatement();
@@ -217,20 +336,30 @@ public class TransactionDatabase {
     }
 
     /**
-     * Checks if a scheduled transaction with the given schedule name exists in the database.
-     * @param scheduleName the name of the scheduled transaction to check.
-     * @return true if a scheduled transaction with the given name exists, false otherwise.
+     * Clears all transactions from the 'transactions' table.
      */
-    public boolean scheduledTransactionNameExists(String scheduleName) {
-        String sql = "SELECT COUNT(*) FROM scheduled_transactions WHERE scheduleName = ?";
+    public void clearTransactions() {
+        String sql = "DELETE FROM transactions";
         try (Connection conn = connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, scheduleName);
-            ResultSet rs = pstmt.executeQuery();
-            return rs.getInt(1) > 0;
+             Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+            System.out.println("All transactions have been cleared.");
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+    }
+
+    /**
+     * Clears all scheduled transactions from the 'scheduled_transactions' table.
+     */
+    public void clearScheduledTransactions() {
+        String sql = "DELETE FROM scheduled_transactions";
+        try (Connection conn = connect();
+             Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+            System.out.println("All scheduled transactions have been cleared.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

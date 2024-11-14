@@ -9,24 +9,27 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.MainController">
+<AnchorPane fx:id="mainRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="800.0" prefWidth="1280.0"
+            xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="application.controller.MainController">
    <children>
       <AnchorPane prefHeight="64.0" prefWidth="1280.0">
          <children>
             <Separator layoutX="1.0" layoutY="-2.0" prefHeight="59.0" prefWidth="1280.0" style="-fx-border-color: black;" valignment="BASELINE" />
-            <Separator orientation="VERTICAL" prefHeight="800.0" prefWidth="71.0" style="-fx-border-color: black;" valignment="BASELINE" />
             <AnchorPane prefHeight="57.0" prefWidth="70.0" style="-fx-background-color: #444444;">
                <children>
                   <VBox alignment="CENTER" layoutX="-1.0" prefHeight="60.0" prefWidth="70.0">
                      <children>
-                        <ImageView fitHeight="35.0" fitWidth="35.0" onMouseClicked="#showMenuSlider" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="menuIcon" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../src/application/icons/menu.png" />
                            </image>
                         </ImageView>
                      </children>
                   </VBox>
-               </children></AnchorPane>
+               </children>
+            </AnchorPane>
             <ImageView fitHeight="25.0" fitWidth="20.0" layoutX="1246.0" layoutY="18.0" onMouseClicked="#closeApp" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../src/application/icons/close2.png" />

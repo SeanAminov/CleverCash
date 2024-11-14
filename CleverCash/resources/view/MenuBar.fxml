@@ -11,13 +11,13 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="215.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.MainController">
+<AnchorPane fx:id="menuPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="215.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.MenuBarController">
    <children>
       <AnchorPane prefHeight="806.0" prefWidth="215.0">
          <children>
             <AnchorPane prefHeight="80.0" prefWidth="215.0" style="-fx-background-color: gray;">
                <children>
-                  <ImageView fitHeight="55.0" fitWidth="35.0" layoutX="14.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="55.0" fitWidth="35.0" layoutX="14.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#closeMenu">
                      <image>
                         <Image url="@../../src/application/icons/close.png" />
                      </image>
@@ -45,97 +45,20 @@
                </padding>
                <children>
                   <ButtonBar buttonMinWidth="100.0" prefHeight="40.0" prefWidth="150.0">
-                    <buttons>
+                     <buttons>
                         <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../src/application/icons/home.png" />
                            </image>
                         </ImageView>
-                      <Button alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="39.0" prefWidth="125.0" style="-fx-background-color: #AAAAAA;" text="Home">
-                           <font>
-                              <Font name="System Bold" size="16.0" />
-                           </font>
-                        </Button>
-                    </buttons>
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
-                     <padding>
-                        <Insets right="10.0" />
-                     </padding>
-                  </ButtonBar>
-                  <ButtonBar buttonMinWidth="100.0" prefHeight="40.0" prefWidth="150.0">
-                     <buttons>
-                        <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../src/application/icons/accounts.png" />
-                           </image>
-                        </ImageView>
-                        <Button alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="39.0" prefWidth="125.0" style="-fx-background-color: #AAAAAA;" text="Accounts">
+                        <Button alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="39.0" prefWidth="125.0" style="-fx-background-color: #AAAAAA;" text="Home" onAction="#handleHomeAction">
                            <font>
                               <Font name="System Bold" size="16.0" />
                            </font>
                         </Button>
                      </buttons>
-                     <padding>
-                        <Insets right="10.0" />
-                     </padding>
-                  </ButtonBar>
-                  <ButtonBar buttonMinWidth="100.0" prefHeight="40.0" prefWidth="150.0">
-                     <buttons>
-                        <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../src/application/icons/transactions.png" />
-                           </image>
-                        </ImageView>
-                        <Button alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="39.0" prefWidth="125.0" style="-fx-background-color: #AAAAAA;" text="Transactions">
-                           <font>
-                              <Font name="System Bold" size="16.0" />
-                           </font>
-                        </Button>
-                     </buttons>
-                     <padding>
-                        <Insets right="10.0" />
-                     </padding>
-                  </ButtonBar>
-                  <ButtonBar buttonMinWidth="100.0" prefHeight="40.0" prefWidth="150.0">
-                     <buttons>
-                        <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../src/application/icons/reports.png" />
-                           </image>
-                        </ImageView>
-                        <Button alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="39.0" prefWidth="125.0" style="-fx-background-color: #AAAAAA;" text="Reports">
-                           <font>
-                              <Font name="System Bold" size="16.0" />
-                           </font>
-                        </Button>
-                     </buttons>
-                     <padding>
-                        <Insets right="10.0" />
-                     </padding>
-                  </ButtonBar>
-                  <ButtonBar buttonMinWidth="100.0" prefHeight="40.0" prefWidth="150.0">
-                     <buttons>
-                        <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../src/application/icons/settings.png" />
-                           </image>
-                        </ImageView>
-                        <Button alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="39.0" prefWidth="125.0" style="-fx-background-color: #AAAAAA;" text="Settings">
-                           <font>
-                              <Font name="System Bold" size="16.0" />
-                           </font>
-                        </Button>
-                     </buttons>
-                     <padding>
-                        <Insets right="10.0" />
-                     </padding>
                   </ButtonBar>
                </children>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
             </VBox>
          </children>
       </AnchorPane>

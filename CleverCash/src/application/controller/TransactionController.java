@@ -482,6 +482,8 @@ public class TransactionController {
     }
 
     private void refreshScheduledTransactionTableData() {
-        scheduledTransactionTableView.setItems(transactionDatabase.getAllScheduledTransactions());
+        ObservableList<ScheduledTransactionBean> scheduledTransactions = transactionDatabase.getAllScheduledTransactions();
+        scheduledTransactions.sort((a, b) -> Integer.compare(a.getDueDate(), b.getDueDate()));
+        scheduledTransactionTableView.setItems(scheduledTransactions);
     }
 }

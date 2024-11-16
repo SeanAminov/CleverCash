@@ -113,7 +113,7 @@ public class TransactionController {
                 if (empty || item == null) {
                     setText(null);
                 } else {
-                    setText(String.format("%.2f", item));
+                    setText(String.format("$%.2f", item));
                 }
                 setStyle("-fx-font-size: 16px;");
             }
@@ -178,7 +178,7 @@ public class TransactionController {
                 if (empty || item == null) {
                     setText(null);
                 } else {
-                    setText(String.format("%.2f", item));
+                    setText(String.format("$%.2f", item));
                 }
                 setStyle("-fx-font-size: 16px;");
             }

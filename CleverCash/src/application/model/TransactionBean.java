@@ -7,6 +7,7 @@ import java.time.LocalDate;
  * transaction type, date, description, and amounts involved.
  */
 public class TransactionBean {
+    private int id; // New field to store the unique identifier
     private String account;
     private String transactionType;
     private LocalDate transactionDate;
@@ -17,15 +18,17 @@ public class TransactionBean {
     /**
      * Constructs a new TransactionBean with the specified details.
      *
-     * @param account               the name of the account associated with this transaction.
-     * @param transactionType       the type of transaction (e.g., "expense", "income").
-     * @param transactionDate       the date when the transaction occurred.
+     * @param id                     the unique identifier of the transaction.
+     * @param account                the name of the account associated with this transaction.
+     * @param transactionType        the type of transaction (e.g., "expense", "income").
+     * @param transactionDate        the date when the transaction occurred.
      * @param transactionDescription a description of the transaction.
-     * @param paymentAmount         the payment amount (for expense transactions).
-     * @param depositAmount         the deposit amount (for income transactions).
+     * @param paymentAmount          the payment amount (for expense transactions).
+     * @param depositAmount          the deposit amount (for income transactions).
      */
-    public TransactionBean(String account, String transactionType, LocalDate transactionDate,
+    public TransactionBean(int id, String account, String transactionType, LocalDate transactionDate,
                            String transactionDescription, Double paymentAmount, Double depositAmount) {
+        this.id = id;
         this.account = account;
         this.transactionType = transactionType;
         this.transactionDate = transactionDate;
@@ -34,7 +37,26 @@ public class TransactionBean {
         this.depositAmount = depositAmount;
     }
 
+    /**
+     * Constructs a new TransactionBean without id (for adding new transactions).
+     *
+     * @param account                the name of the account associated with this transaction.
+     * @param transactionType        the type of transaction (e.g., "expense", "income").
+     * @param transactionDate        the date when the transaction occurred.
+     * @param transactionDescription a description of the transaction.
+     * @param paymentAmount          the payment amount (for expense transactions).
+     * @param depositAmount          the deposit amount (for income transactions).
+     */
+    public TransactionBean(String account, String transactionType, LocalDate transactionDate,
+                           String transactionDescription, Double paymentAmount, Double depositAmount) {
+        this(-1, account, transactionType, transactionDate, transactionDescription, paymentAmount, depositAmount);
+    }
+
     // Getters and setters
+
+    public int getId() {
+        return id;
+    }
 
     public String getAccount() {
         return account;

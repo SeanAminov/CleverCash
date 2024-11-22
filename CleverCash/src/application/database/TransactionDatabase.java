@@ -11,7 +11,7 @@ import java.util.Map;
 
 /**
  * TransactionDatabase manages database operations for transactions and scheduled transactions.
- * It includes methods to add, retrieve, and delete transactions from the SQLite database.
+ * It includes methods to add, retrieve, update, and delete transactions from the SQLite database.
  */
 public class TransactionDatabase {
     // Path to the SQLite database file
@@ -43,6 +43,7 @@ public class TransactionDatabase {
     private void createTransactionTable() {
         String sql = """
             CREATE TABLE IF NOT EXISTS transactions (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 account TEXT NOT NULL,
                 transactionType TEXT NOT NULL,
                 transactionDate TEXT NOT NULL,
@@ -240,6 +241,7 @@ public class TransactionDatabase {
 
             while (rs.next()) {
                 TransactionBean transaction = new TransactionBean(
+                    rs.getInt("id"),
                     rs.getString("account"),
                     rs.getString("transactionType"),
                     LocalDate.parse(rs.getString("transactionDate")),
@@ -285,20 +287,15 @@ public class TransactionDatabase {
     }
 
     /**
-     * Deletes a transaction from the 'transactions' table based on specific fields.
+     * Deletes a transaction from the 'transactions' table based on id.
      * @param transaction the TransactionBean to be deleted.
      */
     public void deleteTransaction(TransactionBean transaction) {
-        String sql = "DELETE FROM transactions WHERE account = ? AND transactionType = ? AND transactionDate = ? AND transactionDescription = ? AND paymentAmount = ? AND depositAmount = ?";
+        String sql = "DELETE FROM transactions WHERE id = ?";
 
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, transaction.getAccount());
-            pstmt.setString(2, transaction.getTransactionType());
-            pstmt.setString(3, transaction.getTransactionDate().toString());
-            pstmt.setString(4, transaction.getTransactionDescription());
-            pstmt.setDouble(5, transaction.getPaymentAmount() != null ? transaction.getPaymentAmount() : 0);
-            pstmt.setDouble(6, transaction.getDepositAmount() != null ? transaction.getDepositAmount() : 0);
+            pstmt.setInt(1, transaction.getId());
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -319,5 +316,73 @@ public class TransactionDatabase {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Updates an existing transaction in the 'transactions' table.
+     * @param originalTransaction the original TransactionBean before the update.
+     * @param updatedTransaction the updated TransactionBean with new values.
+     */
+    public void updateTransaction(TransactionBean originalTransaction, TransactionBean updatedTransaction) {
+        String sql = "UPDATE transactions SET account = ?, transactionType = ?, transactionDate = ?, transactionDescription = ?, paymentAmount = ?, depositAmount = ? WHERE id = ?";
+
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, updatedTransaction.getAccount());
+            pstmt.setString(2, updatedTransaction.getTransactionType());
+            pstmt.setString(3, updatedTransaction.getTransactionDate().toString());
+            pstmt.setString(4, updatedTransaction.getTransactionDescription());
+            pstmt.setDouble(5, updatedTransaction.getPaymentAmount() != null ? updatedTransaction.getPaymentAmount() : 0);
+            pstmt.setDouble(6, updatedTransaction.getDepositAmount() != null ? updatedTransaction.getDepositAmount() : 0);
+            pstmt.setInt(7, originalTransaction.getId());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Updates an existing scheduled transaction in the 'scheduled_transactions' table.
+     * @param originalScheduledTransaction the original ScheduledTransactionBean before the update.
+     * @param updatedScheduledTransaction the updated ScheduledTransactionBean with new values.
+     * @throws SQLException if a database access error occurs.
+     */
+    public void updateScheduledTransaction(ScheduledTransactionBean originalScheduledTransaction, ScheduledTransactionBean updatedScheduledTransaction) throws SQLException {
+        String sql = "UPDATE scheduled_transactions SET scheduleName = ?, account = ?, transactionType = ?, frequency = ?, dueDate = ?, paymentAmount = ? WHERE scheduleName = ?";
+
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, updatedScheduledTransaction.getScheduleName());
+            pstmt.setString(2, updatedScheduledTransaction.getAccount());
+            pstmt.setString(3, updatedScheduledTransaction.getTransactionType());
+            pstmt.setString(4, updatedScheduledTransaction.getFrequency());
+            pstmt.setInt(5, updatedScheduledTransaction.getDueDate());
+            pstmt.setDouble(6, updatedScheduledTransaction.getPaymentAmount());
+            pstmt.setString(7, originalScheduledTransaction.getScheduleName());
+
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Checks if a scheduled transaction name exists in the 'scheduled_transactions' table.
+     * @param scheduleName the scheduled transaction name to check.
+     * @return true if the scheduled transaction name exists, false otherwise.
+     */
+    public boolean scheduledTransactionNameExists(String scheduleName) {
+        String sql = "SELECT COUNT(*) FROM scheduled_transactions WHERE scheduleName = ?";
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, scheduleName);
+            ResultSet rs = pstmt.executeQuery();
+            return rs.getInt(1) > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

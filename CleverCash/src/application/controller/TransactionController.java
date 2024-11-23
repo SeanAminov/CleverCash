@@ -433,7 +433,8 @@ public class TransactionController {
     private void filterScheduledTransactions(String searchText) {
         ObservableList<ScheduledTransactionBean> allScheduledTransactions = transactionDatabase.getAllScheduledTransactions();
         if (searchText == null || searchText.isEmpty()) {
-            scheduledTransactionTableView.setItems(allScheduledTransactions);
+            // If search field is empty, refresh and sort the scheduled transactions by due date
+            refreshScheduledTransactionTableData();
         } else {
             ObservableList<ScheduledTransactionBean> filteredScheduledTransactions = FXCollections.observableArrayList();
             for (ScheduledTransactionBean scheduledTransaction : allScheduledTransactions) {
@@ -441,6 +442,8 @@ public class TransactionController {
                     filteredScheduledTransactions.add(scheduledTransaction);
                 }
             }
+            // Sort the filtered list by due date ascending
+            filteredScheduledTransactions.sort((a, b) -> Integer.compare(a.getDueDate(), b.getDueDate()));
             scheduledTransactionTableView.setItems(filteredScheduledTransactions);
         }
     }

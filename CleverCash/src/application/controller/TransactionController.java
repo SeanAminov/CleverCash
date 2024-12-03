@@ -20,11 +20,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.function.Consumer;
 import java.sql.SQLException;
 import javafx.scene.Node;
-import javafx.event.EventHandler;
 
 public class TransactionController {
 
@@ -76,12 +77,24 @@ public class TransactionController {
     @FXML
     private TextField searchScheduledTransactionField;
 
+    private HomeController homeController;
+
+    // Variable to hold the pop-up Stage
+    private Stage popupStage;
+
+    public Stage getPopupStage() {
+        return popupStage;
+    }
+
     @FXML
     public void initialize() {
         setupTransactionTableView();
         setupScheduledTransactionTableView();
         refreshTransactionTableData();
         refreshScheduledTransactionTableData();
+
+        // Obtain reference to HomeController via MainController
+        homeController = MainController.getInstance().getHomeController();
 
         // Apply font scaling adjustments to the table cells
         applyFontScaling(transactionTableView);
@@ -127,6 +140,9 @@ public class TransactionController {
                     transactionDatabase.deleteTransaction(transaction);
                     refreshTransactionTableData();
                     showAlert("Success", "Transaction deleted successfully!");
+
+                    // Notify HomeController to update expense trends
+                    notifyHomeController();
                 }
             }
         ));
@@ -149,23 +165,27 @@ public class TransactionController {
                     transactionDatabase.deleteScheduledTransaction(scheduledTransaction);
                     refreshScheduledTransactionTableData();
                     showAlert("Success", "Scheduled transaction deleted successfully!");
+
+                    // Notify HomeController to update expense trends
+                    notifyHomeController();
                 }
             }
         ));
     }
 
     @FXML
-    private void handleAddTransaction() {
+    public void handleAddTransaction() {
+        popupStage = new Stage();
         showTransactionForm(null); // null indicates new transaction
     }
 
     @FXML
-    private void handleAddScheduledTransaction() {
+    public void handleAddScheduledTransaction() {
+        popupStage = new Stage();
         showScheduledTransactionForm(null); // null indicates new scheduled transaction
     }
 
     private void showTransactionForm(TransactionBean transaction) {
-        Stage popupStage = new Stage();
         popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setTitle(transaction == null ? "Add Transaction" : "Edit Transaction");
 
@@ -180,7 +200,6 @@ public class TransactionController {
     }
 
     private void showScheduledTransactionForm(ScheduledTransactionBean scheduledTransaction) {
-        Stage popupStage = new Stage();
         popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setTitle(scheduledTransaction == null ? "Add Scheduled Transaction" : "Edit Scheduled Transaction");
 
@@ -261,6 +280,9 @@ public class TransactionController {
 
                 refreshTransactionTableData();
                 popupStage.close();
+
+                // Notify HomeController to update expense trends
+                notifyHomeController();
             } catch (NumberFormatException ex) {
                 showAlert("Error", "Please enter valid numeric values for payment and deposit amounts.");
             }
@@ -364,6 +386,9 @@ public class TransactionController {
                 }
                 refreshScheduledTransactionTableData();
                 popupStage.close();
+
+                // Notify HomeController to update expense trends
+                notifyHomeController();
             } catch (SQLException e) {
                 if (e.getMessage().contains("UNIQUE constraint failed")) {
                     showAlert("Duplicate Schedule Name", "A scheduled transaction with the name '" + scheduledTransaction.getScheduleName() + "' already exists. Please use a unique name.");
@@ -408,10 +433,12 @@ public class TransactionController {
     }
 
     private void handleEditTransaction(TransactionBean transaction) {
+        popupStage = new Stage();
         showTransactionForm(transaction);
     }
 
     private void handleEditScheduledTransaction(ScheduledTransactionBean scheduledTransaction) {
+        popupStage = new Stage();
         showScheduledTransactionForm(scheduledTransaction);
     }
 
@@ -493,17 +520,30 @@ public class TransactionController {
         };
     }
 
-    private <T> TableCell<T, Void> createDeleteButtonCell(java.util.function.Consumer<T> deleteHandler) {
-        return new TableCell<T, Void>() {
+    /**
+     * Creates a TableCell with a delete button containing an icon.
+     */
+    private <T> TableCell<T, Void> createDeleteButtonCell(Consumer<T> deleteHandler) {
+        return new TableCell<>() {
             private final Button deleteButton = new Button();
 
             {
+                // Load the icon image
                 Image deleteIcon = new Image(getClass().getResourceAsStream("/application/icons/delete.png"));
-                ImageView deleteIconView = new ImageView(deleteIcon);
-                deleteIconView.setFitHeight(20);
-                deleteIconView.setFitWidth(20);
-                deleteButton.setGraphic(deleteIconView);
+                ImageView iconView = new ImageView(deleteIcon);
+
+                // Set properties for the icon view
+                iconView.setFitWidth(25);  // Set the width of the icon
+                iconView.setFitHeight(25); // Set the height of the icon
+                iconView.setPreserveRatio(true); // Maintain aspect ratio
+
+                // Set the ImageView as the graphic for the button
+                deleteButton.setGraphic(iconView);
+
+                // Style the button (transparent background, padding, etc.)
                 deleteButton.setStyle("-fx-background-color: transparent; -fx-padding: 5px;");
+
+                // Add action to the button
                 deleteButton.setOnAction(event -> {
                     T item = getTableView().getItems().get(getIndex());
                     deleteHandler.accept(item);
@@ -513,8 +553,12 @@ public class TransactionController {
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
-                setGraphic(empty ? null : deleteButton);
-                setStyle("-fx-alignment: CENTER;");
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(deleteButton);
+                    setStyle("-fx-alignment: CENTER;"); // Center the content of the cell
+                }
             }
         };
     }
@@ -544,10 +588,19 @@ public class TransactionController {
         return comboBox;
     }
 
-    private Button createButton(String text, EventHandler<javafx.event.ActionEvent> handler) {
+    private Button createButton(String text, javafx.event.EventHandler<javafx.event.ActionEvent> handler) {
         Button button = new Button(text);
         button.getStyleClass().add("popup-button");
         button.setOnAction(handler);
         return button;
+    }
+
+    // Method to notify HomeController to update expense trends
+    private void notifyHomeController() {
+        if (homeController != null) {
+            homeController.updateExpenseTrends();
+            homeController.updatePieChartData();
+            homeController.updateSummaryLabels();
+        }
     }
 }

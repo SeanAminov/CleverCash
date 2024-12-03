@@ -9,7 +9,7 @@
 <AnchorPane fx:id="accountBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="745.0" prefWidth="1210.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.AccountController">
    <children>
       <!-- Accounts TableView -->
-      <TableView fx:id="tableView" layoutX="82.0" layoutY="209.0" prefHeight="473.0" prefWidth="1050.0">
+      <TableView fx:id="tableView" layoutX="82.0" layoutY="209.0" prefHeight="473.0" prefWidth="1050.0" style="-fx-border-color: black;">
         <columns>
           <TableColumn fx:id="nameCol" prefWidth="400.0" text="Account Name" />
           <TableColumn fx:id="dateCol" prefWidth="275.0" text="Opening Date" />

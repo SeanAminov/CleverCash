@@ -23,7 +23,7 @@
       <VBox layoutX="80.0" layoutY="105.0" spacing="10.0">
          <children>
             <Label style="-fx-font-size: 20px; -fx-font-weight: bold;" text="Transactions" />
-            <TableView fx:id="transactionTableView" prefHeight="255.0" prefWidth="1050.0">
+            <TableView fx:id="transactionTableView" prefHeight="255.0" prefWidth="1050.0" style="-fx-border-color: black;">
                <columns>
                   <TableColumn fx:id="accountCol" prefWidth="175.0" text="Account" />
                   <TableColumn fx:id="transactionTypeCol" prefWidth="150.0" text="Transaction Type" />
@@ -44,7 +44,7 @@
       <VBox layoutX="80.0" layoutY="435.0" spacing="10.0">
          <children>
             <Label style="-fx-font-size: 20px; -fx-font-weight: bold;" text="Scheduled Transactions" />
-            <TableView fx:id="scheduledTransactionTableView" prefHeight="255.0" prefWidth="1050.0">
+            <TableView fx:id="scheduledTransactionTableView" prefHeight="255.0" prefWidth="1050.0" style="-fx-border-color: black;">
                <columns>
                   <TableColumn fx:id="scheduleNameCol" prefWidth="175.0" text="Schedule Name" />
                   <TableColumn fx:id="scheduledAccountCol" prefWidth="175.0" text="Account" />
@@ -63,7 +63,7 @@
 
       <!-- Search Field for Scheduled Transactions -->
       <HBox alignment="CENTER_LEFT" layoutX="80.0" layoutY="392.0" prefHeight="30.0" prefWidth="1050.0" spacing="25.0" />
-      <TextField fx:id="searchTransactionField" layoutX="455.0" layoutY="85.0" prefHeight="40.0" prefWidth="300.0" promptText="Search Transactions" style="-fx-font-size: 16;" />
-      <TextField fx:id="searchScheduledTransactionField" layoutX="455.0" layoutY="415.0" prefHeight="40.0" prefWidth="300.0" promptText="Search Scheduled Transactions" style="-fx-font-size: 16;" />
+      <TextField fx:id="searchTransactionField" layoutX="455.0" layoutY="85.0" prefHeight="40.0" prefWidth="300.0" promptText="Search Transactions" style="-fx-font-size: 16; -fx-border-color: black;" />
+      <TextField fx:id="searchScheduledTransactionField" layoutX="455.0" layoutY="415.0" prefHeight="40.0" prefWidth="300.0" promptText="Search Scheduled Transactions" style="-fx-font-size: 16; -fx-border-color: black;" />
    </children>
 </AnchorPane>

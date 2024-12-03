@@ -17,6 +17,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -52,6 +53,13 @@ public class AccountController {
     // Define a DateTimeFormatter with the desired pattern
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
 
+    // Variable to hold the pop-up Stage
+    private Stage popupStage;
+
+    public Stage getPopupStage() {
+        return popupStage;
+    }
+
     @FXML
     public void initialize() {
         setupAccountTableView();
@@ -79,17 +87,25 @@ public class AccountController {
             private final Button deleteButton = new Button();
 
             {
+                // Load the icon image
                 Image deleteIcon = new Image(getClass().getResourceAsStream("/application/icons/delete.png"));
-                ImageView deleteIconView = new ImageView(deleteIcon);
-                deleteIconView.setFitHeight(40); // 2.5 times larger
-                deleteIconView.setFitWidth(40);  // 2.5 times larger
-                deleteButton.setGraphic(deleteIconView);
+                ImageView iconView = new ImageView(deleteIcon);
 
+                // Set properties for the icon view (optional: adjust size)
+                iconView.setFitWidth(25);  // Set the width of the icon
+                iconView.setFitHeight(25); // Set the height of the icon
+                iconView.setPreserveRatio(true); // Maintain aspect ratio
+
+                // Set the ImageView as the graphic for the button
+                deleteButton.setGraphic(iconView);
+
+                // Add action to the button
                 deleteButton.setOnAction(event -> {
                     AccountBean account = getTableView().getItems().get(getIndex());
                     handleDeleteAccount(account);
                 });
 
+                // Style the button (transparent background, padding, etc.)
                 deleteButton.setStyle("-fx-background-color: transparent; -fx-padding: 5px;");
             }
 
@@ -105,6 +121,7 @@ public class AccountController {
             }
         });
     }
+
 
     private TableCell<AccountBean, String> createStyledCellForString() {
         return new TableCell<>() {
@@ -184,9 +201,10 @@ public class AccountController {
         alert.showAndWait();
     }
 
+    // Changed method from private to public
     @FXML
-    private void showAccountPopup() {
-        Stage popupStage = new Stage();
+    public void showAccountPopup() {
+        popupStage = new Stage();
         popupStage.setResizable(false);
         popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setTitle("Add New Account");
@@ -204,6 +222,9 @@ public class AccountController {
     private VBox createAccountForm(Stage popupStage) {
         GridPane grid = new GridPane();
         grid.getStyleClass().add("popup-grid");
+        grid.setVgap(10);
+        grid.setHgap(10);
+        grid.setPadding(new Insets(20));
 
         Label nameLabel = new Label("Account Name:");
         nameLabel.getStyleClass().add("popup-label");

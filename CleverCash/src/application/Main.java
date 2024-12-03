@@ -16,26 +16,6 @@ public class Main extends Application {
 
     private double xOffset = 0;
     private double yOffset = 0;
-    
-    // Singleton instance of root
-    private static AnchorPane root;
-
-    /**
-     * Gets the singleton instance of the root AnchorPane.
-     * Loads the FXML layout only once, if not already loaded.
-     * 
-     * @return The singleton instance of the root AnchorPane.
-     */
-    private static AnchorPane getRoot() {
-        if (root == null) {
-            try {
-                root = FXMLLoader.load(Main.class.getResource("/view/Main.fxml"));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return root;
-    }
 
     /**
      * Starts the JavaFX application by setting up the primary stage.
@@ -46,15 +26,17 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            AnchorPane root = getRoot();
+            AnchorPane root = FXMLLoader.load(getClass().getResource("/view/Main.fxml"));
             Scene scene = new Scene(root, 1280, 800);
 
-            // Fetch the top bar AnchorPane from the FXML (assuming it’s the first child in root)
-            AnchorPane topBar = (AnchorPane) root.getChildren().get(0);
+            // Fetch the top bar AnchorPane from the FXML using fx:id
+            AnchorPane topBar = (AnchorPane) root.lookup("#topBar");
 
-            // Apply the draggable behavior to each child in the top bar
-            for (javafx.scene.Node child : topBar.getChildren()) {
-                setDraggable(child, primaryStage);
+            if (topBar != null) {
+                // Apply the draggable behavior to each child in the top bar
+                for (javafx.scene.Node child : topBar.getChildren()) {
+                    setDraggable(child, primaryStage);
+                }
             }
 
             // Set up specific behavior for the close button (assuming it has fx:id="closeButton")
@@ -73,6 +55,7 @@ public class Main extends Application {
             primaryStage.show();
         } catch (Exception e) {
             e.printStackTrace();
+            // Show alert or user-friendly message
         }
     }
 

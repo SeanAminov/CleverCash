@@ -9,10 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="mainRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            prefHeight="800.0" prefWidth="1280.0"
-            xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="application.controller.MainController">
+<AnchorPane fx:id="mainRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.MainController">
    <children>
       <AnchorPane prefHeight="64.0" prefWidth="1280.0">
          <children>
@@ -46,11 +43,6 @@
          <children>
             <VBox alignment="TOP_CENTER" layoutY="57.0" prefHeight="743.0" prefWidth="70.0" spacing="30.0" style="-fx-background-color: #AAAAAA;">
                <children>
-                  <ImageView fitHeight="55.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../src/application/icons/search.png" />
-                     </image>
-                  </ImageView>
                   <ImageView fitHeight="55.0" fitWidth="35.0" layoutX="5.0" layoutY="5.0" onMouseClicked="#showHomePage" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../src/application/icons/home.png" />

@@ -1,5 +1,6 @@
 package application;
 
+import application.services.Alerts;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -31,7 +32,6 @@ public class Main extends Application {
 
             // Fetch the top bar AnchorPane from the FXML using fx:id
             AnchorPane topBar = (AnchorPane) root.lookup("#topBar");
-
             if (topBar != null) {
                 // Apply the draggable behavior to each child in the top bar
                 for (javafx.scene.Node child : topBar.getChildren()) {
@@ -53,6 +53,11 @@ public class Main extends Application {
             primaryStage.setScene(scene);
             primaryStage.initStyle(StageStyle.UNDECORATED);
             primaryStage.show();
+
+            // After showing the stage, call Alerts to notify user about scheduled transactions due today.
+            Alerts alerts = new Alerts();
+            alerts.showDueTodayNotifications();
+
         } catch (Exception e) {
             e.printStackTrace();
             // Show alert or user-friendly message

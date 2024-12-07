@@ -27,9 +27,7 @@ public class Alerts {
         StringBuilder dueTodayList = new StringBuilder();
         for (ScheduledTransactionBean st : allScheduled) {
             if (st.getDueDate() == today.getDayOfMonth()) {
-                dueTodayList.append("- ").append(st.getScheduleName())
-                            .append(" (").append(st.getTransactionType()).append(", $")
-                            .append(String.format("%.2f", st.getPaymentAmount())).append(")\n");
+                dueTodayList.append("- ").append(st.getScheduleName()).append(" (Amount Due: $").append(String.format("%.2f", st.getPaymentAmount())).append(")\n");
             }
         }
 

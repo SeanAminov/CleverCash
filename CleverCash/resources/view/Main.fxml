@@ -13,7 +13,7 @@
    <children>
       <AnchorPane prefHeight="64.0" prefWidth="1280.0">
          <children>
-            <Separator layoutX="1.0" layoutY="-2.0" prefHeight="59.0" prefWidth="1280.0" style="-fx-border-color: black;" valignment="BASELINE" />
+            <Separator fx:id="topBar" layoutX="1.0" layoutY="-2.0" prefHeight="59.0" prefWidth="1280.0" style="-fx-border-color: black;" valignment="BASELINE" />
             <AnchorPane prefHeight="57.0" prefWidth="70.0" style="-fx-background-color: #444444;">
                <children>
                   <VBox alignment="CENTER" layoutX="-1.0" prefHeight="60.0" prefWidth="70.0">
@@ -27,7 +27,7 @@
                   </VBox>
                </children>
             </AnchorPane>
-            <ImageView fitHeight="25.0" fitWidth="20.0" layoutX="1246.0" layoutY="18.0" onMouseClicked="#closeApp" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="closeButton" fitHeight="25.0" fitWidth="20.0" layoutX="1246.0" layoutY="18.0" onMouseClicked="#closeApp" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../src/application/icons/close2.png" />
                </image>
@@ -66,11 +66,6 @@
                   <ImageView fitHeight="55.0" fitWidth="35.0" onMouseClicked="#showReportPage" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../src/application/icons/reports.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fitHeight="55.0" fitWidth="35.0" onMouseClicked="#showSettingPage" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../src/application/icons/settings.png" />
                      </image>
                   </ImageView>
                </children>

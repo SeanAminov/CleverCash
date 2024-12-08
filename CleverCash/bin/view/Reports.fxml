@@ -15,8 +15,9 @@
             <Label style="-fx-font-size: 20px; -fx-font-weight: bold;" text="Transactions by Selected Account" />
             <TableView fx:id="accountTransactionsTable" prefHeight="255.0" prefWidth="1050.0" style="-fx-border-color: black;">
                 <columns>
+                    <TableColumn fx:id="accTransTypeCol" prefWidth="150.0" text="Transaction Type" />
                     <TableColumn fx:id="accTransDateCol" prefWidth="150.0" text="Date" />
-                    <TableColumn fx:id="accTransDescriptionCol" prefWidth="300.0" text="Description" />
+                    <TableColumn fx:id="accTransDescriptionCol" prefWidth="250.0" text="Description" />
                     <TableColumn fx:id="accPaymentAmountCol" prefWidth="150.0" text="Payment Amount" />
                     <TableColumn fx:id="accDepositAmountCol" prefWidth="150.0" text="Deposit Amount" />
                 </columns>
@@ -30,8 +31,9 @@
             <Label style="-fx-font-size: 20px; -fx-font-weight: bold;" text="Transactions by Selected Transaction Type" />
             <TableView fx:id="typeTransactionsTable" prefHeight="255.0" prefWidth="1050.0" style="-fx-border-color: black;">
                 <columns>
+                    <TableColumn fx:id="typeAccountCol" prefWidth="150.0" text="Account" />
                     <TableColumn fx:id="typeTransDateCol" prefWidth="150.0" text="Date" />
-                    <TableColumn fx:id="typeTransDescriptionCol" prefWidth="300.0" text="Description" />
+                    <TableColumn fx:id="typeTransDescriptionCol" prefWidth="250.0" text="Description" />
                     <TableColumn fx:id="typePaymentAmountCol" prefWidth="150.0" text="Payment Amount" />
                     <TableColumn fx:id="typeDepositAmountCol" prefWidth="150.0" text="Deposit Amount" />
                 </columns>

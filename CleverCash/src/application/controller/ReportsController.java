@@ -16,12 +16,6 @@ import javafx.stage.Stage;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-/**
- * The ReportsController handles the "Report of Transactions by an Account" and
- * "Report of Transactions by a Transaction Type".
- * It includes two ComboBoxes for selecting the Account and Transaction Type,
- * and two TableViews for displaying the filtered transactions.
- */
 public class ReportsController {
 
     @FXML
@@ -40,6 +34,9 @@ public class ReportsController {
     private TableColumn<TransactionBean, String> accTransDescriptionCol;
 
     @FXML
+    private TableColumn<TransactionBean, String> accTransTypeCol;
+
+    @FXML
     private TableColumn<TransactionBean, Double> accPaymentAmountCol;
 
     @FXML
@@ -53,6 +50,9 @@ public class ReportsController {
 
     @FXML
     private TableColumn<TransactionBean, String> typeTransDescriptionCol;
+
+    @FXML
+    private TableColumn<TransactionBean, String> typeAccountCol;
 
     @FXML
     private TableColumn<TransactionBean, Double> typePaymentAmountCol;
@@ -123,8 +123,9 @@ public class ReportsController {
      */
     private void initializeAccountTransactionsTable() {
         // Set up cell value factories using PropertyValueFactory
-        accTransDateCol.setCellValueFactory(new PropertyValueFactory<>("transactionDate"));
+    	accTransDateCol.setCellValueFactory(new PropertyValueFactory<>("transactionDate"));
         accTransDescriptionCol.setCellValueFactory(new PropertyValueFactory<>("transactionDescription"));
+        accTransTypeCol.setCellValueFactory(new PropertyValueFactory<>("transactionType"));
         accPaymentAmountCol.setCellValueFactory(new PropertyValueFactory<>("paymentAmount"));
         accDepositAmountCol.setCellValueFactory(new PropertyValueFactory<>("depositAmount"));
 
@@ -177,7 +178,8 @@ public class ReportsController {
      */
     private void initializeTypeTransactionsTable() {
         // Set up cell value factories using PropertyValueFactory
-        typeTransDateCol.setCellValueFactory(new PropertyValueFactory<>("transactionDate"));
+    	typeAccountCol.setCellValueFactory(new PropertyValueFactory<>("account"));
+    	typeTransDateCol.setCellValueFactory(new PropertyValueFactory<>("transactionDate"));
         typeTransDescriptionCol.setCellValueFactory(new PropertyValueFactory<>("transactionDescription"));
         typePaymentAmountCol.setCellValueFactory(new PropertyValueFactory<>("paymentAmount"));
         typeDepositAmountCol.setCellValueFactory(new PropertyValueFactory<>("depositAmount"));

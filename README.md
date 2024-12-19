@@ -22,8 +22,6 @@ The following resources and libraries were utilized in the development of this a
 
 ## Want to try the software yourself?
 
-# CC.zip File
-
 This repository contains a file named `CC.zip`. You can download it directly using the link below:
 
 ## 📥 [Download CC.zip](https://github.com/SeanAminov/dev-01-07/raw/main/CC.zip)
@@ -32,5 +30,5 @@ This repository contains a file named `CC.zip`. You can download it directly usi
 1. Click the link above to download the file.
 2. The download will start automatically.
 3. Extract the file using your preferred ZIP extraction tool.
-
-If you encounter any issues, feel free to open an issue in the repository.
+4. Make sure you have JavaFX installed on your device. [https://jdk.java.net/javafx23/]
+5. Ensure you are inside of the correct directory then run the command `java --module-path "C:\path\to\javafx-sdk\lib" --add-modules javafx.controls,javafx.fxml -jar CleverCash.jar`

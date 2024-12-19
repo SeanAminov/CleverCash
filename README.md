@@ -22,4 +22,15 @@ The following resources and libraries were utilized in the development of this a
 
 ## Want to try the software yourself?
 
-[Download ZIP](./CC.zip)
+# CC.zip File
+
+This repository contains a file named `CC.zip`. You can download it directly using the link below:
+
+## 📥 [Download CC.zip](https://github.com/SeanAminov/dev-01-07/raw/main/CC.zip)
+
+### Instructions
+1. Click the link above to download the file.
+2. The download will start automatically.
+3. Extract the file using your preferred ZIP extraction tool.
+
+If you encounter any issues, feel free to open an issue in the repository.

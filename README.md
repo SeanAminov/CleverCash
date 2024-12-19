@@ -20,7 +20,7 @@ The following resources and libraries were utilized in the development of this a
 - **SceneBuilder**: A visual layout tool for designing user interfaces using FXML.
 - **SQLite**: A lightweight, file-based database for data storage and management.
 
-## Want to try the software yourself?
+## Try It Out
 
 This repository contains a file named `CC.zip`. You can download it directly using the link below:
 

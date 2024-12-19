@@ -22,4 +22,4 @@ The following resources and libraries were utilized in the development of this a
 
 ## Want to try the software yourself?
 
-[Download ZIP](./CC.zip)
+[Download ZIP](./zip/CC.zip)

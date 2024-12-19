@@ -38,7 +38,7 @@
                <graphic>
                   <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../src/application/icons/accounts.png" />
+                        <Image url="@/application/icons/accounts.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -50,7 +50,7 @@
                <graphic>
                   <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../src/application/icons/transactions.png" />
+                        <Image url="@/application/icons/transactions.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -62,7 +62,7 @@
                <graphic>
                   <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../src/application/icons/scheduled_transaction.png" />
+                        <Image url="@/application/icons/scheduled_transaction.png" />
                      </image>
                   </ImageView>
                </graphic>

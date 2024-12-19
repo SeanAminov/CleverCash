@@ -22,6 +22,7 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 
 public class HomeController {
 
@@ -92,10 +93,27 @@ public class HomeController {
         loadAccountController();
         loadTransactionController();
 
-        // Hide the labels initially
+        // Hide the labels initially and style them
         lineChartDataLabel.setVisible(false);
         barChartDataLabel.setVisible(false);
         pieChartDataLabel.setVisible(false);
+
+        // Updated label style: no padding and computed width
+        String labelStyle = "-fx-background-color: #ffffff; -fx-border-color: #000000; -fx-padding: 0; -fx-font-size: 12px;";
+        lineChartDataLabel.setStyle(labelStyle);
+        barChartDataLabel.setStyle(labelStyle);
+        pieChartDataLabel.setStyle(labelStyle);
+
+        // Ensure labels size themselves to their content
+        setLabelSizeToContent(lineChartDataLabel);
+        setLabelSizeToContent(barChartDataLabel);
+        setLabelSizeToContent(pieChartDataLabel);
+    }
+
+    private void setLabelSizeToContent(Label label) {
+        label.setMinWidth(javafx.scene.layout.Region.USE_COMPUTED_SIZE);
+        label.setPrefWidth(javafx.scene.layout.Region.USE_COMPUTED_SIZE);
+        label.setMaxWidth(javafx.scene.layout.Region.USE_PREF_SIZE);
     }
 
     private void loadAccountController() {
@@ -200,7 +218,7 @@ public class HomeController {
                     data.getNode().setStyle("-fx-pie-color: red;");
                 }
 
-                // Add event handler for toggling label display
+                // Event handler to show label at mouse position
                 data.getNode().setOnMouseClicked(event -> {
                     if (selectedPieData != null && selectedPieData == data) {
                         pieChartDataLabel.setVisible(false);
@@ -210,6 +228,8 @@ public class HomeController {
                         String name = data.getName();
                         double value = data.getPieValue();
                         pieChartDataLabel.setText(name + ": $" + String.format("%.2f", value));
+                        // Position at mouse click
+                        positionLabelAtCursor(pieChartDataLabel, event);
                         pieChartDataLabel.setVisible(true);
                     }
                 });
@@ -231,31 +251,46 @@ public class HomeController {
             int currentMonth = today.getMonthValue();
             int currentDay = today.getDayOfMonth();
 
-            // Define starting month based on when transactions started
-            int startingMonth = 1; // Default to January
-            if (currentYear == 2023) {
-                startingMonth = 10; // Started transactions in October 2023
+            // Determine earliest month from transactions
+            int earliestMonth = 13;
+            int earliestYear = currentYear;
+            for (TransactionBean t : transactions) {
+                LocalDate d = t.getTransactionDate();
+                int ty = d.getYear();
+                int tm = d.getMonthValue();
+
+                if (ty < earliestYear) {
+                    earliestYear = ty;
+                    earliestMonth = tm;
+                } else if (ty == earliestYear && tm < earliestMonth) {
+                    earliestMonth = tm;
+                }
             }
 
-            // Initialize monthlyExpenses with 0.0 for each month from Jan to Dec
+            if (transactions.isEmpty() || earliestMonth == 13) {
+                System.err.println("Impossible to parse earliest month from transactions. Please add some transactions first.");
+                return; 
+            }
+
+            // Initialize monthlyExpenses for all months of the year
             for (int month = 1; month <= 12; month++) {
                 monthlyExpenses.put(month, 0.0);
             }
 
-            // Process regular transactions from startingMonth onwards
+            // Process regular transactions for the current year starting from earliestMonth
             for (TransactionBean transaction : transactions) {
                 LocalDate transactionDate = transaction.getTransactionDate();
                 int transactionMonth = transactionDate.getMonthValue();
                 int transactionYear = transactionDate.getYear();
 
-                if (transactionYear == currentYear && transactionMonth >= startingMonth) {
+                if (transactionYear == earliestYear && transactionMonth >= earliestMonth && transactionYear == currentYear) {
                     double amount = transaction.getPaymentAmount() - transaction.getDepositAmount();
                     monthlyExpenses.merge(transactionMonth, amount, Double::sum);
                 }
             }
 
-            // Process scheduled transactions for current and future months only
-            int scheduledStartMonth = Math.max(currentMonth, startingMonth);
+            // Process scheduled transactions
+            int scheduledStartMonth = Math.max(currentMonth, earliestMonth);
             for (ScheduledTransactionBean scheduledTransaction : scheduledTransactions) {
                 int dueDate = scheduledTransaction.getDueDate();
                 if (dueDate > 31) continue;
@@ -280,7 +315,6 @@ public class HomeController {
                 double totalForMonth = monthlyExpenses.getOrDefault(month, 0.0);
                 final int finalMonth = month;
                 XYChart.Data<String, Number> dataPoint = new XYChart.Data<>(getMonthName(finalMonth), totalForMonth);
-
                 series.getData().add(dataPoint);
             }
 
@@ -310,11 +344,11 @@ public class HomeController {
                             lineChartDataLabel.setVisible(false);
                             selectedLineDataPoint = null;
                         } else {
-                            // Show label
+                            // Show label at mouse position
                             selectedLineDataPoint = data;
-                            String month = data.getXValue();
                             Number amount = data.getYValue();
-                            lineChartDataLabel.setText("Month: " + month + ", Amount: $" + String.format("%.2f", amount.doubleValue()));
+                            lineChartDataLabel.setText("Amount: $" + String.format("%.2f", amount.doubleValue()));
+                            positionLabelAtCursor(lineChartDataLabel, event);
                             lineChartDataLabel.setVisible(true);
                         }
                     });
@@ -329,7 +363,6 @@ public class HomeController {
         var transactionTypes = transactionDatabase.getAllTransactionTypes();
 
         if (transactionTypes.isEmpty()) {
-            // Optionally, display a message or leave the chart empty
             return;
         }
 
@@ -341,7 +374,6 @@ public class HomeController {
             XYChart.Data<String, Number> dataPoint = new XYChart.Data<>(type, amount);
             series.getData().add(dataPoint);
 
-            // Add listener to ensure the node is available before setting the event handler
             dataPoint.nodeProperty().addListener((obs, oldNode, newNode) -> {
                 if (newNode != null) {
                     newNode.setOnMouseClicked(event -> {
@@ -353,6 +385,7 @@ public class HomeController {
                             String typeName = dataPoint.getXValue();
                             Number value = dataPoint.getYValue();
                             barChartDataLabel.setText(typeName + ": $" + String.format("%.2f", value.doubleValue()));
+                            positionLabelAtCursor(barChartDataLabel, event);
                             barChartDataLabel.setVisible(true);
                         }
                     });
@@ -424,5 +457,13 @@ public class HomeController {
         } else {
             System.err.println("TransactionController is not initialized");
         }
+    }
+
+    /**
+     * Positions a given label at the mouse event location exactly at the cursor.
+     */
+    private void positionLabelAtCursor(Label label, MouseEvent event) {
+        label.setLayoutX(event.getSceneX() - 75);
+        label.setLayoutY(event.getSceneY() - 75);
     }
 }

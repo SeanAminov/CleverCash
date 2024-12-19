@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public class TransactionDatabase {
     // Path to the SQLite database file
-    private static final String DB_URL = "jdbc:sqlite:src/application/database/transactions.db";
+	private static final String DB_URL = "jdbc:sqlite:" + System.getProperty("user.dir") + "/database/transactions.db";
 
     /**
      * Establishes a connection to the SQLite database.

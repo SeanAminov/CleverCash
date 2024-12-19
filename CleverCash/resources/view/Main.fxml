@@ -20,7 +20,7 @@
                      <children>
                         <ImageView fx:id="menuIcon" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../src/application/icons/menu.png" />
+                              <Image url="@/application/icons/menu.png" />
                            </image>
                         </ImageView>
                      </children>
@@ -29,7 +29,7 @@
             </AnchorPane>
             <ImageView fx:id="closeButton" fitHeight="25.0" fitWidth="20.0" layoutX="1246.0" layoutY="18.0" onMouseClicked="#closeApp" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../src/application/icons/close2.png" />
+                  <Image url="@/application/icons/close2.png" />
                </image>
             </ImageView>
             <Label layoutX="82.0" layoutY="10.0" prefHeight="36.0" prefWidth="143.0" text="Clever Cash">
@@ -45,27 +45,27 @@
                <children>
                   <ImageView fitHeight="55.0" fitWidth="35.0" layoutX="5.0" layoutY="5.0" onMouseClicked="#showHomePage" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../src/application/icons/home.png" />
+                        <Image url="@/application/icons/home.png" />
                      </image>
                   </ImageView>
                   <ImageView fitHeight="55.0" fitWidth="35.0" onMouseClicked="#showAccountPage" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../src/application/icons/accounts.png" />
+                        <Image url="@/application/icons/accounts.png" />
                      </image>
                   </ImageView>
                   <ImageView fitHeight="55.0" fitWidth="35.0" onMouseClicked="#showTransactionTypePage" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../src/application/icons/clipboard.png" />
+                        <Image url="@/application/icons/clipboard.png" />
                      </image>
                   </ImageView>
                   <ImageView fitHeight="55.0" fitWidth="35.0" onMouseClicked="#showTransactionPage" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../src/application/icons/transactions.png" />
+                        <Image url="@/application/icons/transactions.png" />
                      </image>
                   </ImageView>
                   <ImageView fitHeight="55.0" fitWidth="35.0" onMouseClicked="#showReportPage" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../src/application/icons/reports.png" />
+                        <Image url="@/application/icons/reports.png" />
                      </image>
                   </ImageView>
                </children>

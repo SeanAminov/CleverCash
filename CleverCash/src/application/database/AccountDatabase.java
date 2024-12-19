@@ -12,7 +12,7 @@ import java.time.LocalDate;
  */
 public class AccountDatabase {
 
-    private static final String DB_URL = "jdbc:sqlite:src/application/database/accounts.db";
+	private static final String DB_URL = "jdbc:sqlite:" + System.getProperty("user.dir") + "/database/accounts.db";
 
     public AccountDatabase() {
         createTableIfNotExists();

@@ -17,7 +17,7 @@ Clever Cash is a desktop application designed to help users manage their finance
 The following resources and libraries were utilized in the development of this application:
 
 - **JavaFX**: A framework for building rich desktop applications in Java.
-- **SceneBuilder**: A visual layout tool for designing user interfaces using FXML.
+- **Scene Builder**: A visual layout tool for designing user interfaces using FXML.
 - **SQLite**: A lightweight, file-based database for data storage and management.
 
 ## Try It Out

